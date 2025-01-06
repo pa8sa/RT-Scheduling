@@ -1,6 +1,9 @@
 import threading
 import time
+from typing import List
 from queue import Queue
+from task import Task
+from resource_ import Resource_
 
 R1_lock = threading.Lock()
 R2_lock = threading.Lock()
@@ -21,7 +24,7 @@ QUANTUM = 0.5
 core_load = [0, 0, 0]
 core_weights = [1, 1, 1]
 
-def weighted_round_robin(task):
+def weighted_round_robin(task: Task):
     global core_load
     min_load = float('inf')
     chosen_core = -1
@@ -38,11 +41,10 @@ def weighted_round_robin(task):
     print(f"Task {task.name} assigned to core {chosen_core}")
     return chosen_core
 
-
 def core(index):
     while True:
         try:
-            task = index_to_ready_queue[index].get(timeout=1) 
+            task: Task = index_to_ready_queue[index].get(timeout=1) 
             task.state = 'running'
             print(f"Core {index} running task {task.name}")
 
@@ -76,8 +78,7 @@ def core(index):
         except Exception as e:
             break
 
-
-def subSystem1(Rs, tasks):
+def subSystem1(resources: List[Resource_], tasks: List[Task]):
     global ready_queue1, ready_queue2, ready_queue3, waiting_queue
 
     tasks = sorted(tasks, key=lambda x: x.entering_time)
@@ -92,11 +93,11 @@ def subSystem1(Rs, tasks):
     
     is_first = 0
     while not waiting_queue.empty():
-        if is_first <=3:
-            core_load[int(task.dest_cpu)-1] += 1
-            index_to_ready_queue[int(task.dest_cpu)-1].put(task)
+        if is_first <= 3:
+            core_load[int(task.dest_cpu) - 1] += 1
+            index_to_ready_queue[int(task.dest_cpu) - 1].put(task)
             task.state = 'ready'
-            is_first +=1
+            is_first += 1
     
         else:
             if not waiting_queue.empty():

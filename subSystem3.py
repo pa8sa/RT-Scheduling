@@ -1,2 +1,2 @@
-def subSystem3(Rs, tasks):
+def subSystem3(resources, tasks):
     pass

@@ -7,7 +7,7 @@ from subSystem2 import subSystem2
 from subSystem3 import subSystem3
 from subSystem4 import subSystem4
 
-iToSubMap ={
+iToSubMap = {
   0: subSystem1,
   1: subSystem2,
   2: subSystem3,
@@ -16,7 +16,7 @@ iToSubMap ={
 
 def get_input():
   tasks = []
-  Rs = []
+  resources = []
 
   with open('in.txt', 'r') as f:
     lines = f.readlines()
@@ -24,7 +24,7 @@ def get_input():
       r1, r2 = lines[i].strip().split(' ')
       R1 = Resource_(i, 'R1', r1)
       R2 = Resource_(i, 'R2', r2)
-      Rs.append([R1, R2])
+      resources.append([R1, R2])
 
     i = 4
     # get subsystem 1 tasks
@@ -49,17 +49,16 @@ def get_input():
     tasks.append(subSystem3Tasks)
     tasks.append(subSystem4Tasks)
     
-    return Rs, tasks
-
+    return resources, tasks
 
 def mainThread():
   print('Hello from main thread!')
-  Rs, tasks = get_input()
+  resources, tasks = get_input()
   sub_system_threads = []
 
   for i in range(4):
     subSystem = iToSubMap[i]
-    t = threading.Thread(target=subSystem, args=(Rs[i], tasks[i]))
+    t = threading.Thread(target=subSystem, args=(resources[i], tasks[i]))
     sub_system_threads.append(t)
     t.start()
     
