@@ -41,68 +41,74 @@ def weighted_round_robin(task: Task):
     print(f"Task {task.name} assigned to core {chosen_core}")
     return chosen_core
 
-def core(index):
+def core(index, resources: List[Resource_]):
+    ready_queue = index_to_ready_queue[index]
+    
     while True:
         try:
-            task: Task = index_to_ready_queue[index].get(timeout=1) 
+            R1 = resources[0]
+            R2 = resources[1]
+            task: Task = ready_queue.get(timeout=1) 
             task.state = 'running'
-            print(f"Core {index} running task {task.name}")
-
-            if task.resource1_usage:
+            print(f'\nR usage {task.resource1_usage, task.resource2_usage} count {R1.count, R2.count}\n')
+            # check if resources are available
+            if task.resource1_usage <= R1.count and task.resource2_usage <= R2.count:
                 R1_lock.acquire()
-                print(f"Task {task.name} acquired R1")
-            if task.resource2_usage:
                 R2_lock.acquire()
-                print(f"Task {task.name} acquired R2")
+                print(f"Task {task.name} acquired Resources")
+            # if resources are not available, put the task back in the waiting queue
+            else:
+                print(f"Task {task.name} is waiting for resources")
+                task.state = 'waiting'
+                waiting_queue.put(task)
+                continue
 
             exec_time = min(QUANTUM, task.remaining_duration)
             # time.sleep(exec_time)
+            print(f'before exec {task.remaining_duration}')
             task.remaining_duration -= exec_time
+            print(f'after exec {task.remaining_duration}')
 
-            if task.resource1_usage:
-                print(f"Task {task.name} released R1")
-                R1_lock.release()
-            if task.resource2_usage:
-                print(f"Task {task.name} released R2")
-                R2_lock.release()
+            R1_lock.release()
+            R2_lock.release()
 
             if task.remaining_duration > 0:
                 task.state = 'waiting'
                 print(f"Task {task.name} preempted with {task.remaining_duration} time remaining")
-                waiting_queue.put(task)
+                ready_queue.put(task)
             else:
                 task.state = 'completed'
                 print(f"Task {task.name} completed on core {index}")
-                core_load[index] -= 1
 
         except Exception as e:
             break
 
+# handle krdn Starvation
 def subSystem1(resources: List[Resource_], tasks: List[Task]):
     global ready_queue1, ready_queue2, ready_queue3, waiting_queue
 
-    tasks = sorted(tasks, key=lambda x: x.entering_time)
+    number_of_tasks = len(tasks)
     for task in tasks:
         waiting_queue.put(task)
 
     cores = []
     for i in range(3):
-        t = threading.Thread(target=core, args=(i,))
+        t = threading.Thread(target=core, args=(i,resources))
         cores.append(t)
         t.start()
     
     is_first = 0
     while not waiting_queue.empty():
-        if is_first <= 3:
-            core_load[int(task.dest_cpu) - 1] += 1
+        task = waiting_queue.get()
+        
+        if is_first < number_of_tasks:
+            # print(f"Task {task.name} assigned to {int(task.dest_cpu) - 1}")
             index_to_ready_queue[int(task.dest_cpu) - 1].put(task)
             task.state = 'ready'
             is_first += 1
     
         else:
-            if not waiting_queue.empty():
-                task = waiting_queue.get()
-                weighted_round_robin(task)
+            weighted_round_robin(task)
 
     for t in cores:
         t.join()

@@ -22,8 +22,8 @@ def get_input():
     lines = f.readlines()
     for i in range(4):
       r1, r2 = lines[i].strip().split(' ')
-      R1 = Resource_(i, 'R1', r1)
-      R2 = Resource_(i, 'R2', r2)
+      R1 = Resource_(i, 'R1', int(r1))
+      R2 = Resource_(i, 'R2', int(r2))
       resources.append([R1, R2])
 
     i = 4
@@ -32,7 +32,7 @@ def get_input():
     while lines[i] != '$':
       sub_system_number = 1
       name, duration, resource1_usage, resource2_usage, entering_time, dest_cpu = lines[i].strip().split(' ')
-      task = Task(sub_system_number, name, duration, resource1_usage, resource2_usage, entering_time, dest_cpu=dest_cpu)
+      task = Task(sub_system_number, name, int(duration), int(resource1_usage), int(resource2_usage), int(entering_time), dest_cpu=int(dest_cpu))
       subSystem1Tasks.append(task)
       i += 1
 
