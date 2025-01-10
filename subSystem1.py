@@ -21,23 +21,18 @@ index_to_ready_queue = {
 
 QUANTUM = 1
 
-core_load = [0, 0, 0]
-
 def get_quantum(task: Task):
     return QUANTUM * task.weight
 
 def weighted_round_robin(task: Task, is_first):
-    global core_load
-    
     if is_first:
         ready_queue = index_to_ready_queue[int(task.dest_cpu) - 1]
         ready_queue.put(task)
-        core_load[int(task.dest_cpu) - 1] += 1
         task.state = 'ready'
     else:
-        chosen_core = core_load.index(min(core_load))
-
-        core_load[chosen_core] += 1
+        queue_sizes = [sum(task.duration for task in list(index_to_ready_queue[i].queue)) for i in range(3)]
+        chosen_core = queue_sizes.index(min(queue_sizes)) 
+        
         print(f"\nTask {task.name} assigned to core {chosen_core}")
         index_to_ready_queue[chosen_core].put(task)
         task.state = 'ready'
@@ -78,8 +73,6 @@ def core(index, resources: List[Resource_]):
                 print(f"\nTask {task.name} COMPLETED on core {index}")
                 alive_tasks -=1
 
-            core_load[index] -= 1
-            
         except Exception as e:
             break
 
