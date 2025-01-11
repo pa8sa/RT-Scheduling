@@ -14,6 +14,8 @@ ready_queue1 = Queue()
 ready_queue2 = Queue()
 ready_queue3 = Queue()
 
+cores_finished = 0
+
 index_to_ready_queue = {
     0: ready_queue1,
     1: ready_queue2,
@@ -49,7 +51,7 @@ def load_balancing(task: Task, is_first):
         task.state = 'ready'
 
 def core(index, resources: List[Resource_]):
-    global waiting_queue, alive_tasks
+    global waiting_queue, alive_tasks, cores_finished
     ready_queue = index_to_ready_queue[index]
     
     while True:
@@ -57,7 +59,7 @@ def core(index, resources: List[Resource_]):
             globals.sys1_ready_threads_lock.acquire()
             if globals.sys1_ready_threads == 2:
                 print(f"---------------------- time unit: {globals.time_unit}")
-                globals.sys1_finish_threads = 0
+                globals.sys1_finish_threads = 0 + cores_finished
                 globals.time_unit += 1
             globals.sys1_ready_threads += 1
             print(f"ready threads: {globals.sys1_ready_threads}")
@@ -78,7 +80,7 @@ def core(index, resources: List[Resource_]):
                 
                 globals.sys1_finish_threads_lock.acquire()
                 if globals.sys1_finish_threads == 2:
-                    globals.sys1_ready_threads = 0
+                    globals.sys1_ready_threads = 0 + cores_finished
                 globals.sys1_finish_threads += 1
                 print(f"finsihed threads: {globals.sys1_finish_threads} core {index} task {task.name}")
                 globals.sys1_finish_threads_lock.release()
@@ -94,7 +96,7 @@ def core(index, resources: List[Resource_]):
             
             globals.sys1_finish_threads_lock.acquire()
             if globals.sys1_finish_threads == 2:
-                globals.sys1_ready_threads = 0
+                globals.sys1_ready_threads = 0 + cores_finished
             globals.sys1_finish_threads += 1
             print(f"finsihed threads: {globals.sys1_finish_threads} core {index} task {task.name}")
             globals.sys1_finish_threads_lock.release()
@@ -110,6 +112,12 @@ def core(index, resources: List[Resource_]):
                 alive_tasks -=1
 
         except Exception as e:
+            cores_finished += 1
+            globals.sys1_finish_threads_lock.acquire()
+            if globals.sys1_finish_threads == 2:
+                globals.sys1_ready_threads = 0 + cores_finished
+            globals.sys1_finish_threads += 1
+            globals.sys1_finish_threads_lock.release()
             break
 
 # handle krdn Starvation
