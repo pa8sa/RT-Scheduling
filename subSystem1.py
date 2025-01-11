@@ -24,7 +24,7 @@ QUANTUM = 1
 def get_quantum(task: Task):
     return QUANTUM * task.weight
 
-def weighted_round_robin(task: Task, is_first):
+def load_balancing(task: Task, is_first):
     if is_first:
         ready_queue = index_to_ready_queue[int(task.dest_cpu) - 1]
         ready_queue.put(task)
@@ -101,7 +101,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     while alive_tasks > 0:
         if not waiting_queue.empty():
             task = waiting_queue.get()
-            weighted_round_robin(task, is_first < number_of_tasks)
+            load_balancing(task, is_first < number_of_tasks)
             is_first += 1
             
         time.sleep(0.2)
