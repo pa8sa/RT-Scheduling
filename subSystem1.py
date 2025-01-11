@@ -1,3 +1,4 @@
+import globals
 import threading
 import time
 from typing import List
@@ -21,6 +22,16 @@ index_to_ready_queue = {
 
 QUANTUM = 1
 
+def wait_to_start_together():
+    while True:
+        if globals.sys1_ready_threads == 3:
+            break
+
+def wait_to_finish_together():
+    while True:
+        if globals.sys1_finish_threads == 3:
+            break
+
 def get_quantum(task: Task):
     return QUANTUM * task.weight
 
@@ -43,6 +54,15 @@ def core(index, resources: List[Resource_]):
     
     while True:
         try:
+            globals.sys1_ready_threads_lock.acquire()
+            if globals.sys1_ready_threads == 2:
+                print(f"---------------------- time unit: {globals.time_unit}")
+                globals.sys1_finish_threads = 0
+                globals.time_unit += 1
+            globals.sys1_ready_threads += 1
+            print(f"ready threads: {globals.sys1_ready_threads}")
+            globals.sys1_ready_threads_lock.release()
+            wait_to_start_together()
             R1 = resources[0]
             R2 = resources[1]
             task: Task = ready_queue.get(timeout=1) 
@@ -55,14 +75,30 @@ def core(index, resources: List[Resource_]):
                 print(f"\nTask {task.name} is waiting for resources")
                 task.state = 'waiting'
                 waiting_queue.put(task)
+                
+                globals.sys1_finish_threads_lock.acquire()
+                if globals.sys1_finish_threads == 2:
+                    globals.sys1_ready_threads = 0
+                globals.sys1_finish_threads += 1
+                print(f"finsihed threads: {globals.sys1_finish_threads} core {index} task {task.name}")
+                globals.sys1_finish_threads_lock.release()
+                wait_to_finish_together()
+                
                 continue
 
             exec_time = min(get_quantum(task), task.duration)
-            time.sleep(.5)
             task.duration -= exec_time
 
             R1_lock.release()
             R2_lock.release()
+            
+            globals.sys1_finish_threads_lock.acquire()
+            if globals.sys1_finish_threads == 2:
+                globals.sys1_ready_threads = 0
+            globals.sys1_finish_threads += 1
+            print(f"finsihed threads: {globals.sys1_finish_threads} core {index} task {task.name}")
+            globals.sys1_finish_threads_lock.release()
+            wait_to_finish_together()
 
             if task.duration > 0:
                 task.state = 'waiting'
@@ -104,7 +140,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
             load_balancing(task, is_first < number_of_tasks)
             is_first += 1
             
-        time.sleep(0.2)
+        # time.sleep(0.1)
 
     for t in cores:
         t.join()
