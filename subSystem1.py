@@ -180,8 +180,7 @@ def core(index, resources: List[Resource_]):
             globals.sys1_finish_threads_lock.release()
             print(f'{index} EXCEPTION:  {e}')
             break
-
-# handle krdn Starvation
+# Arrival time
 def subSystem1(resources: List[Resource_], tasks: List[Task]):
     global ready_queue1, ready_queue2, ready_queue3, waiting_queue, alive_tasks
     
