@@ -1,6 +1,5 @@
 import globals
 import threading
-import time
 from typing import List
 from queue import Queue
 from task import Task
@@ -96,9 +95,11 @@ def pull_migration(core_index):
             f"\n [PULL MIGRATION] Task {task.name} migrated from core {max_load_core} to core {core_index} for load balancing."
         )
 
-
 def core(index, resources: List[Resource_]):
     global waiting_queue, alive_tasks, cores_finished
+    
+    how_many_rounds = -1
+    prev_task = None
     
     while True:
         ready_queue = index_to_ready_queue[index]
@@ -112,11 +113,13 @@ def core(index, resources: List[Resource_]):
                 globals.time_unit += 1
             globals.sys1_ready_threads += 1
             globals.sys1_ready_threads_lock.release()
+            
             wait_to_start_together()
+            #! ============================================================= START ===================================================================
             
             R1 = resources[0]
             R2 = resources[1]
-            if ready_queue.empty():
+            if ready_queue.empty() and prev_task is None:
                 globals.sys1_finish_threads_lock.acquire()
                 if globals.sys1_finish_threads == 2:
                     globals.sys1_ready_threads = 0 + cores_finished
@@ -125,10 +128,15 @@ def core(index, resources: List[Resource_]):
                 wait_to_finish_together()
                 continue
             
-            task: Task = ready_queue.get()
-            task.state = 'running'
+            if prev_task is None:
+                task: Task = ready_queue.get()
+                task.state = 'running'
+            else:
+                task = prev_task
+                
             print (f"\n [RUNNING] Task {task.name} is RUNNING on core {index}")
             with R_lock:
+                
                 if task.resource1_usage <= R1.count and task.resource2_usage <= R2.count:
                     R1.count -= task.resource1_usage
                     R2.count -= task.resource2_usage
@@ -144,24 +152,38 @@ def core(index, resources: List[Resource_]):
                     wait_to_finish_together()
                     
                     continue
-
-            exec_time = min(get_quantum(task), task.duration)
+            
+            if how_many_rounds < 0:
+                how_many_rounds = get_quantum(task)
+                prev_task = task
+            
+                
+            exec_time = min(1, task.duration)
             task.duration -= exec_time
+            how_many_rounds -= 1
 
             with R_lock:
                 R1.count += task.resource1_usage
                 R2.count += task.resource2_usage
-
-            if task.duration > 0:
+            
+            if how_many_rounds == 0 or task.duration <= 0:
+                prev_task = None
+                how_many_rounds = -1
+                
+            if prev_task is not None :
+                print(f'\n [NEXT ROUND] TASK {task.name} Went for the Next Round. how_many_rounds: {how_many_rounds} task.duration: {task.duration}')
+            elif task.duration > 0:
+                prev_task = None
                 task.state = 'waiting'
                 print(f"\n [WAITING QUEUE] Task {task.name} went back to WAITING QUEUE with {task.duration} time remaining")
                 waiting_queue.put(task)
             else:
+                prev_task = None
                 with alive_lock:
                     alive_tasks -= 1
                 task.state = 'completed'
                 print(f"\n [COMPLETED] Task {task.name} COMPLETED on core {index}")
-
+                
                 
             globals.sys1_finish_threads_lock.acquire()
             if globals.sys1_finish_threads == 2:
@@ -170,6 +192,7 @@ def core(index, resources: List[Resource_]):
             globals.sys1_finish_threads_lock.release()
             
             wait_to_finish_together()
+            #! ============================================================= END ===================================================================
             
         except Exception as e:
             cores_finished += 1
@@ -190,6 +213,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     min_duration = min(task.duration for task in tasks)
     for task in tasks:
         task.weight = max(1, task.duration // min_duration)
+        print(f'{task.name} WEIGHT {task.weight} DURATION {task.duration}')
     
     for task in tasks:
         waiting_queue.put(task)
