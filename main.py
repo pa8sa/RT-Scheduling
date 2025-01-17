@@ -28,15 +28,26 @@ def get_input():
     i = 4
     # get subsystem 1 tasks
     subSystem1Tasks = []
-    while lines[i] != '$':
+    while lines[i] != '$\n':
       sub_system_number = 1
       name, duration, resource1_usage, resource2_usage, entering_time, dest_cpu = lines[i].strip().split(' ')
       task = Task(sub_system_number, name, int(duration), int(resource1_usage), int(resource2_usage), int(entering_time), dest_cpu=int(dest_cpu))
       subSystem1Tasks.append(task)
       i += 1
 
+    i += 1
+
     # get subsystem 2 tasks
     subSystem2Tasks = []
+    while lines[i] != '$':
+      sub_system_number = 2
+      name, duration, resource1_usage, resource2_usage, entering_time = lines[i].strip().split(' ')
+      task = Task(sub_system_number, name, int(duration), int(resource1_usage), int(resource2_usage), int(entering_time))
+      subSystem2Tasks.append(task)
+      i += 1
+      
+    i += 1
+    
     # get subsystem 3 tasks
     subSystem3Tasks = []
     # get subsystem 4 tasks
