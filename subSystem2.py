@@ -23,7 +23,11 @@ def wait_to_finish_together():
             break
 
 def core(index, resources: List[Resource_]):
+    global ready_queue
+
     while True:
+        if globals.time_unit == 20:
+            return
         try:
             globals.sys2_ready_threads_lock.acquire()
             if globals.sys2_ready_threads == 1:
@@ -39,13 +43,8 @@ def core(index, resources: List[Resource_]):
             R2 = resources[1]
 
             queue_lock.acquire()
-            if index == 0 and ready_queue.qsize() > 0:
+            if ready_queue.qsize() > 0:
                 task: Task = ready_queue.get()
-                task.state = 'running'
-            elif index == 1 and ready_queue.qsize > 1:
-                temp: Task = ready_queue.get()
-                task: Task = ready_queue.get()
-                ready_queue.put(temp)
                 task.state = 'running'            
             else:
                 queue_lock.release()
@@ -73,6 +72,24 @@ def core(index, resources: List[Resource_]):
             R1_lock.release()
             R2_lock.release()
             
+            if task.duration > 0:
+                queue_lock.acquire()
+                task.state = 'waiting'
+                ready_queue.put(task)
+                
+                task_list = list(ready_queue.queue)
+                task_list.sort(key=lambda task: task.duration)
+                ready_queue = Queue()
+                for task in task_list:
+                    ready_queue.put(task)
+
+                queue_lock.release()
+                # print(f"\nTask {task.name} went back to WAITING QUEUE with {task.duration} time remaining")
+            else:
+                task.state = 'completed'
+                print(f"\n[COMPLETED] Task {task.name} on core {index}")
+                # print(f"\nTask {task.name} COMPLETED on core {index}")
+            
             globals.sys2_finish_threads_lock.acquire()
             if globals.sys2_finish_threads == 1:
                 globals.sys2_ready_threads = 0
@@ -80,16 +97,9 @@ def core(index, resources: List[Resource_]):
             # print(f"finsihed threads: {globals.sys2_finish_threads} core {index} task {task.name}")
             globals.sys2_finish_threads_lock.release()
             wait_to_finish_together()
-
-            if task.duration > 0:
-                task.state = 'waiting'
-                # print(f"\nTask {task.name} went back to WAITING QUEUE with {task.duration} time remaining")
-            else:
-                task.state = 'completed'
-                print(f"\n[COMPLETED] Task {task.name} on core {index}")
-                # print(f"\nTask {task.name} COMPLETED on core {index}")
             
         except Exception as e:
+            print(e)
             pass
 
 def subSystem2(resources: List[Resource_], tasks: List[Task]):
