@@ -23,15 +23,42 @@ index_to_ready_queue = {
 
 QUANTUM = 1
 
-def wait_to_start_together():
-    while True:
-        if globals.sys1_ready_threads == 3:
-            break
+def start_wait(index):
+    globals.subsystems_ready_cycle_lock.acquire()
+    globals.sys1_ready_threads_lock.acquire()
 
-def wait_to_finish_together():
-    while True:
-        if globals.sys1_finish_threads == 3:
-            break
+    pull_migration(index)
+    globals.sys1_ready_threads += 1
+    if globals.sys1_ready_threads == 3:
+        push_migration()
+        globals.sys1_finish_threads = 0 + cores_finished
+        if globals.subsystems_ready_cycle == 1:
+            globals.subsystems_finish_cycle = 0
+            globals.time_unit += 1
+            print(f"---------------------------------------------------------------------------------------- time unit: {globals.time_unit}")
+        globals.subsystems_ready_cycle += 1
+            
+
+    globals.sys1_ready_threads_lock.release()
+    globals.subsystems_ready_cycle_lock.release()
+    
+    globals.wait_for_subsystems_start_together()
+
+def finish_wait():
+    globals.subsystems_finish_cycle_lock.acquire()
+    globals.sys1_finish_threads_lock.acquire()
+
+    globals.sys1_finish_threads += 1
+    if globals.sys1_finish_threads == 3:
+        globals.sys1_ready_threads = 0 + cores_finished
+        if globals.subsystems_finish_cycle == 1:
+            globals.subsystems_ready_cycle = 0
+        globals.subsystems_finish_cycle += 1
+
+    globals.sys1_finish_threads_lock.release()
+    globals.subsystems_finish_cycle_lock.release()
+
+    globals.wait_for_subsystems_finish_together()
 
 def get_quantum(task: Task):
     return QUANTUM * task.weight
@@ -102,30 +129,17 @@ def core(index, resources: List[Resource_]):
     prev_task = None
     
     while True:
+        if globals.time_unit == 40:
+            return
         ready_queue = index_to_ready_queue[index]
         try:
-            globals.sys1_ready_threads_lock.acquire()
-            pull_migration(index)
-            if globals.sys1_ready_threads == 2:
-                push_migration()
-                print(f"---------------------------------------------------------------------------------------- time unit: {globals.time_unit}")
-                globals.sys1_finish_threads = 0 + cores_finished
-                globals.time_unit += 1
-            globals.sys1_ready_threads += 1
-            globals.sys1_ready_threads_lock.release()
-            
-            wait_to_start_together()
+            start_wait(index)
             #! ============================================================= START ===================================================================
             
             R1 = resources[0]
             R2 = resources[1]
             if ready_queue.empty() and prev_task is None:
-                globals.sys1_finish_threads_lock.acquire()
-                if globals.sys1_finish_threads == 2:
-                    globals.sys1_ready_threads = 0 + cores_finished
-                globals.sys1_finish_threads += 1
-                globals.sys1_finish_threads_lock.release()
-                wait_to_finish_together()
+                finish_wait()
                 continue
             
             if prev_task is None:
@@ -144,12 +158,7 @@ def core(index, resources: List[Resource_]):
                     task.state = 'waiting'
                     waiting_queue.put(task)
                     
-                    globals.sys1_finish_threads_lock.acquire()
-                    if globals.sys1_finish_threads == 2:
-                        globals.sys1_ready_threads = 0 + cores_finished
-                    globals.sys1_finish_threads += 1
-                    globals.sys1_finish_threads_lock.release()
-                    wait_to_finish_together()
+                    finish_wait()
                     
                     continue
             
@@ -185,13 +194,7 @@ def core(index, resources: List[Resource_]):
                 print(f"\n [COMPLETED] Task {task.name} COMPLETED on core {index}")
                 
                 
-            globals.sys1_finish_threads_lock.acquire()
-            if globals.sys1_finish_threads == 2:
-                globals.sys1_ready_threads = 0 + cores_finished
-            globals.sys1_finish_threads += 1
-            globals.sys1_finish_threads_lock.release()
-            
-            wait_to_finish_together()
+            finish_wait()
             #! ============================================================= END ===================================================================
             
         except Exception as e:

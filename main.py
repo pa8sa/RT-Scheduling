@@ -71,10 +71,10 @@ def mainThread():
     t = threading.Thread(target=subSystem, args=(resources[i], tasks[i]))
     sub_system_threads.append(t)
     t.start()
-    
+        
   for t in sub_system_threads:
     t.join()
-  
+
 if __name__ == '__main__':
   t = threading.Thread(target=mainThread)
   t.start()
