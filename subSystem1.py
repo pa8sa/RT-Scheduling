@@ -7,6 +7,7 @@ from resource_ import Resource_
 
 R_lock = threading.Lock()
 alive_lock = threading.Lock()
+wait_lock = threading.Lock()
 
 waiting_queue = Queue()
 ready_queue1 = Queue()
@@ -23,42 +24,15 @@ index_to_ready_queue = {
 
 QUANTUM = 1
 
-def start_wait(index):
-    globals.subsystems_ready_cycle_lock.acquire()
-    globals.sys1_ready_threads_lock.acquire()
+def wait_to_start_together():
+    while True:
+        if globals.sys1_ready_threads == 3:
+            break
 
-    pull_migration(index)
-    globals.sys1_ready_threads += 1
-    if globals.sys1_ready_threads == 3:
-        push_migration()
-        globals.sys1_finish_threads = 0 + cores_finished
-        if globals.subsystems_ready_cycle == 1:
-            globals.subsystems_finish_cycle = 0
-            globals.time_unit += 1
-            print(f"---------------------------------------------------------------------------------------- time unit: {globals.time_unit}")
-        globals.subsystems_ready_cycle += 1
-            
-
-    globals.sys1_ready_threads_lock.release()
-    globals.subsystems_ready_cycle_lock.release()
-    
-    globals.wait_for_subsystems_start_together()
-
-def finish_wait():
-    globals.subsystems_finish_cycle_lock.acquire()
-    globals.sys1_finish_threads_lock.acquire()
-
-    globals.sys1_finish_threads += 1
-    if globals.sys1_finish_threads == 3:
-        globals.sys1_ready_threads = 0 + cores_finished
-        if globals.subsystems_finish_cycle == 1:
-            globals.subsystems_ready_cycle = 0
-        globals.subsystems_finish_cycle += 1
-
-    globals.sys1_finish_threads_lock.release()
-    globals.subsystems_finish_cycle_lock.release()
-
-    globals.wait_for_subsystems_finish_together()
+def wait_to_finish_together():
+    while True:
+        if globals.sys1_finish_threads == 3:
+            break
 
 def get_quantum(task: Task):
     return QUANTUM * task.weight
@@ -129,17 +103,30 @@ def core(index, resources: List[Resource_]):
     prev_task = None
     
     while True:
-        if globals.time_unit == 40:
-            return
         ready_queue = index_to_ready_queue[index]
         try:
-            start_wait(index)
+            globals.sys1_ready_threads_lock.acquire()
+            pull_migration(index)
+            if globals.sys1_ready_threads == 2:
+                push_migration()
+                print(f"---------------------------------------------------------------------------------------- time unit: {globals.time_unit}")
+                globals.sys1_finish_threads = 0 + cores_finished
+                globals.time_unit += 1
+            globals.sys1_ready_threads += 1
+            globals.sys1_ready_threads_lock.release()
+            
+            wait_to_start_together()
             #! ============================================================= START ===================================================================
             
             R1 = resources[0]
             R2 = resources[1]
             if ready_queue.empty() and prev_task is None:
-                finish_wait()
+                globals.sys1_finish_threads_lock.acquire()
+                if globals.sys1_finish_threads == 2:
+                    globals.sys1_ready_threads = 0 + cores_finished
+                globals.sys1_finish_threads += 1
+                globals.sys1_finish_threads_lock.release()
+                wait_to_finish_together()
                 continue
             
             if prev_task is None:
@@ -158,7 +145,12 @@ def core(index, resources: List[Resource_]):
                     task.state = 'waiting'
                     waiting_queue.put(task)
                     
-                    finish_wait()
+                    globals.sys1_finish_threads_lock.acquire()
+                    if globals.sys1_finish_threads == 2:
+                        globals.sys1_ready_threads = 0 + cores_finished
+                    globals.sys1_finish_threads += 1
+                    globals.sys1_finish_threads_lock.release()
+                    wait_to_finish_together()
                     
                     continue
             
@@ -194,7 +186,13 @@ def core(index, resources: List[Resource_]):
                 print(f"\n [COMPLETED] Task {task.name} COMPLETED on core {index}")
                 
                 
-            finish_wait()
+            globals.sys1_finish_threads_lock.acquire()
+            if globals.sys1_finish_threads == 2:
+                globals.sys1_ready_threads = 0 + cores_finished
+            globals.sys1_finish_threads += 1
+            globals.sys1_finish_threads_lock.release()
+            
+            wait_to_finish_together()
             #! ============================================================= END ===================================================================
             
         except Exception as e:
@@ -206,8 +204,11 @@ def core(index, resources: List[Resource_]):
             globals.sys1_finish_threads_lock.release()
             print(f'{index} EXCEPTION:  {e}')
             break
+
 # Arrival time
+# Aging
 def subSystem1(resources: List[Resource_], tasks: List[Task]):
+    # return 
     global ready_queue1, ready_queue2, ready_queue3, waiting_queue, alive_tasks
     
     number_of_tasks = len(tasks)
@@ -216,10 +217,6 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     min_duration = min(task.duration for task in tasks)
     for task in tasks:
         task.weight = max(1, task.duration // min_duration)
-        print(f'{task.name} WEIGHT {task.weight} DURATION {task.duration}')
-    
-    for task in tasks:
-        waiting_queue.put(task)
         
     cores = []
     for i in range(3):
@@ -229,6 +226,9 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     
     is_first = 0
     
+    for task in tasks:
+        waiting_queue.put(task)
+        
     while True:
         with alive_lock:
             if alive_tasks == 0:
@@ -236,9 +236,14 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
                 break
             
         if not waiting_queue.empty():
-            task = waiting_queue.get()
-            add_task_to_ready_queue(task, is_first < number_of_tasks)
-            is_first += 1
+            task:Task = waiting_queue.get()
+            
+            if task.entering_time <= globals.time_unit and task.duration > 0:
+                add_task_to_ready_queue(task, is_first < number_of_tasks)
+                is_first += 1
+            else:
+                #######################
+                waiting_queue.put(task)
             
     for t in cores:
         t.join()
