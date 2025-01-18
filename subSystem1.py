@@ -15,6 +15,10 @@ ready_queue3 = Queue()
 
 cores_finished = 0
 
+core1_running_task: Task = None
+core2_running_task: Task = None
+core3_running_task: Task = None
+
 index_to_ready_queue = {
     0: ready_queue1,
     1: ready_queue2,
@@ -44,7 +48,7 @@ def start_wait(index):
     
     globals.wait_for_subsystems_start_together()
 
-def finish_wait():
+def finish_wait(R1: Resource_, R2: Resource_, task1: Task, task2: Task, task3: Task):
     globals.subsystems_finish_cycle_lock.acquire()
     globals.sys1_finish_threads_lock.acquire()
 
@@ -53,12 +57,30 @@ def finish_wait():
         globals.sys1_ready_threads = 0 + cores_finished
         if globals.subsystems_finish_cycle == 1:
             globals.subsystems_ready_cycle = 0
+        print_output(R1=R1, R2=R2, task1=task1, task2=task2, task3=task3)
+        globals.print_output_turn_lock.acquire()
+        globals.print_output_turn = 2
+        globals.print_output_turn_lock.release()
         globals.subsystems_finish_cycle += 1
 
     globals.sys1_finish_threads_lock.release()
     globals.subsystems_finish_cycle_lock.release()
 
     globals.wait_for_subsystems_finish_together()
+
+def print_output(R1: Resource_, R2: Resource_, task1: Task, task2: Task, task3: Task):
+    print("Sub1:")
+    print(f"\tR1: {R1.count} R2: {R2.count}")
+    print(f"\tWaiting Queue: {[task.name for task in list(waiting_queue.queue)]}")
+    print(f"\tCore1:")
+    print(f"\t\tRuning Task: {task1.name if task1 else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name for task in list(ready_queue1.queue)]}")
+    print(f"\tCore2:")
+    print(f"\t\tRuning Task: {task2.name if task2 else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name for task in list(ready_queue2.queue)]}")
+    print(f"\tCore3:")
+    print(f"\t\tRuning Task: {task3.name if task3 else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name for task in list(ready_queue3.queue)]}")
 
 def get_quantum(task: Task):
     return QUANTUM * task.weight
@@ -97,9 +119,9 @@ def push_migration():
         if not source_queue.empty():
             task = source_queue.get()
             destination_queue.put(task)
-            print(
-                f"\n [PUSH MIGRATION] Task {task.name} migrated from core {max_load_core} to core {min_load_core} for load balancing."
-            )
+            # print(
+            #     f"\n [PUSH MIGRATION] Task {task.name} migrated from core {max_load_core} to core {min_load_core} for load balancing."
+            # )
     
 def pull_migration(core_index):
     ready_queue = index_to_ready_queue[core_index]
@@ -118,12 +140,12 @@ def pull_migration(core_index):
     if destination_queue.qsize() - ready_queue.qsize() > 1:
         task = destination_queue.get()
         ready_queue.put(task)
-        print(
-            f"\n [PULL MIGRATION] Task {task.name} migrated from core {max_load_core} to core {core_index} for load balancing."
-        )
+        # print(
+        #     f"\n [PULL MIGRATION] Task {task.name} migrated from core {max_load_core} to core {core_index} for load balancing."
+        # )
 
 def core(index, resources: List[Resource_]):
-    global waiting_queue, alive_tasks, cores_finished
+    global waiting_queue, alive_tasks, cores_finished, core1_running_task, core2_running_task, core3_running_task
     
     how_many_rounds = -1
     prev_task = None
@@ -139,7 +161,7 @@ def core(index, resources: List[Resource_]):
             R1 = resources[0]
             R2 = resources[1]
             if ready_queue.empty() and prev_task is None:
-                finish_wait()
+                finish_wait(R1=R1, R2=R2, task1=core1_running_task, task2=core2_running_task, task3=core3_running_task)
                 continue
             
             if prev_task is None:
@@ -148,7 +170,7 @@ def core(index, resources: List[Resource_]):
             else:
                 task = prev_task
                 
-            print (f"\n [RUNNING] Task {task.name} is RUNNING on core {index}")
+            # print (f"\n [RUNNING] Task {task.name} is RUNNING on core {index}")
             with R_lock:
                 
                 if task.resource1_usage <= R1.count and task.resource2_usage <= R2.count:
@@ -158,7 +180,7 @@ def core(index, resources: List[Resource_]):
                     task.state = 'waiting'
                     waiting_queue.put(task)
                     
-                    finish_wait()
+                    finish_wait(R1=R1, R2=R2, task1=core1_running_task, task2=core2_running_task, task3=core3_running_task)
                     
                     continue
             
@@ -170,6 +192,13 @@ def core(index, resources: List[Resource_]):
             exec_time = min(1, task.duration)
             task.duration -= exec_time
             how_many_rounds -= 1
+            
+            if index == 0:
+                core1_running_task = task
+            elif index == 1:
+                core2_running_task = task
+            elif index == 2:
+                core3_running_task = task
 
             with R_lock:
                 R1.count += task.resource1_usage
@@ -180,21 +209,22 @@ def core(index, resources: List[Resource_]):
                 how_many_rounds = -1
                 
             if prev_task is not None :
-                print(f'\n [NEXT ROUND] TASK {task.name} Went for the Next Round. how_many_rounds: {how_many_rounds} task.duration: {task.duration}')
+                # print(f'\n [NEXT ROUND] TASK {task.name} Went for the Next Round. how_many_rounds: {how_many_rounds} task.duration: {task.duration}')
+                pass
             elif task.duration > 0:
                 prev_task = None
                 task.state = 'waiting'
-                print(f"\n [WAITING QUEUE] Task {task.name} went back to WAITING QUEUE with {task.duration} time remaining")
+                # print(f"\n [WAITING QUEUE] Task {task.name} went back to WAITING QUEUE with {task.duration} time remaining")
                 waiting_queue.put(task)
             else:
                 prev_task = None
                 with alive_lock:
                     alive_tasks -= 1
                 task.state = 'completed'
-                print(f"\n [COMPLETED] Task {task.name} COMPLETED on core {index}")
+                # print(f"\n [COMPLETED] Task {task.name} COMPLETED on core {index}")
                 
                 
-            finish_wait()
+            finish_wait(R1=R1, R2=R2, task1=core1_running_task, task2=core2_running_task, task3=core3_running_task)
             #! ============================================================= END ===================================================================
             
         except Exception as e:
@@ -216,7 +246,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     min_duration = min(task.duration for task in tasks)
     for task in tasks:
         task.weight = max(1, task.duration // min_duration)
-        print(f'{task.name} WEIGHT {task.weight} DURATION {task.duration}')
+        # print(f'{task.name} WEIGHT {task.weight} DURATION {task.duration}')
     
     for task in tasks:
         waiting_queue.put(task)
@@ -232,7 +262,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     while True:
         with alive_lock:
             if alive_tasks == 0:
-                print(f'\n [FINISHED] subsystem 1')
+                # print(f'\n [FINISHED] subsystem 1')
                 break
             
         if not waiting_queue.empty():

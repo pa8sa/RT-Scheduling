@@ -2,6 +2,9 @@ import threading
 
 time_unit = -1
 
+print_output_turn = 1
+print_output_turn_lock = threading.Lock()
+
 subsystems_ready_cycle = 0
 subsystems_finish_cycle = 0
 subsystems_ready_cycle_lock = threading.Lock()
