@@ -12,11 +12,15 @@ R2_lock = threading.Lock()
 
 queue_lock = threading.Lock()
 
+update_queue_var = 0
+update_queue_lock = threading.Lock()
+
 def start_wait():
     globals.subsystems_ready_cycle_lock.acquire()
     globals.sys2_ready_threads_lock.acquire()
 
     globals.sys2_ready_threads += 1
+    print(f"ready threads: {globals.sys2_ready_threads}")
     if globals.sys2_ready_threads == 2:
         globals.sys2_finish_threads = 0
         if globals.subsystems_ready_cycle == 1:
@@ -24,7 +28,6 @@ def start_wait():
             globals.time_unit += 1
             print(f"---------------------------------------------------------------------------------------- time unit: {globals.time_unit}")
         globals.subsystems_ready_cycle += 1
-    print(f"ready threads: {globals.sys2_ready_threads}")
 
     globals.sys2_ready_threads_lock.release()
     globals.subsystems_ready_cycle_lock.release()
@@ -49,7 +52,7 @@ def finish_wait():
     globals.wait_for_subsystems_finish_together()
 
 def core(index, resources: List[Resource_]):
-    global ready_queue
+    global ready_queue, update_queue_var
 
     while True:
         if globals.time_unit == 40:
@@ -57,11 +60,21 @@ def core(index, resources: List[Resource_]):
         try:
             start_wait()
             
+            update_queue_lock.acquire()
+            if update_queue_var == 0:
+                update_queue_var = 1
+            update_queue_lock.release()
+            # while True:
+            #     if update_queue_var == 0:
+            #         break
+            for _ in range(10000000):
+                pass
+
             R1 = resources[0]
             R2 = resources[1]
 
             queue_lock.acquire()
-            if ready_queue.qsize() > 0:
+            if not ready_queue.empty():
                 task: Task = ready_queue.get()
                 task.state = 'running'            
             else:
@@ -84,20 +97,7 @@ def core(index, resources: List[Resource_]):
             R1_lock.release()
             R2_lock.release()
             
-            if task.duration > 0:
-                queue_lock.acquire()
-                task.state = 'waiting'
-                ready_queue.put(task)
-                
-                task_list = list(ready_queue.queue)
-                task_list.sort(key=lambda task: task.duration)
-                ready_queue = Queue()
-                for task in task_list:
-                    ready_queue.put(task)
-
-                queue_lock.release()
-                # print(f"\nTask {task.name} went back to WAITING QUEUE with {task.duration} time remaining")
-            else:
+            if task.duration == 0:
                 task.state = 'completed'
                 print(f"\n[COMPLETED] Task {task.name} on core {index}")
                 # print(f"\nTask {task.name} COMPLETED on core {index}")
@@ -109,7 +109,7 @@ def core(index, resources: List[Resource_]):
             pass
 
 def subSystem2(resources: List[Resource_], tasks: List[Task]):
-    global ready_queue
+    global ready_queue, update_queue_var
     
     for task in tasks:
         ready_queue.put(task)
@@ -118,7 +118,8 @@ def subSystem2(resources: List[Resource_], tasks: List[Task]):
     task_list.sort(key=lambda task: task.duration)
     ready_queue = Queue()
     for task in task_list:
-        ready_queue.put(task)
+        if task.entering_time == 0:
+            ready_queue.put(task)
 
     cores = []
     for i in range(2):
@@ -126,7 +127,28 @@ def subSystem2(resources: List[Resource_], tasks: List[Task]):
         cores.append(t)
         t.start()
         
-    # add tasks to queue based on entry time and sort based on duration remaining
+    local_time_unit = 0
+    while True:
+        if globals.time_unit == 40:
+            break
+        if update_queue_var == 1 and local_time_unit == globals.time_unit:
+            print(f"local time unit: {local_time_unit} , global time unit: {globals.time_unit} , update_queue_var: {update_queue_var}")
+            local_time_unit = globals.time_unit + 1
+            for task in tasks:
+                ready_queue.put(task)
+
+            task_list = list(tasks)
+            task_list.sort(key=lambda task: task.duration)
+            ready_queue = Queue()
+
+            for task in task_list:
+                if task.entering_time <= globals.time_unit and task.duration > 0:
+                    ready_queue.put(task)
+            print(f"ready queue: {[task.name for task in list(ready_queue.queue)]}")
+            update_queue_lock.acquire()
+            update_queue_var = 0
+            update_queue_lock.release()
+        
         
     for t in cores:
         t.join()
