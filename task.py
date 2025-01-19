@@ -1,8 +1,8 @@
 from enum import Enum
 
 class Task:
-  def __init__(self, sub_system_number, name, duration, resource1_usage, resource2_usage, entering_time, dest_cpu = None, period = None, prerequisite_task_name = None):
-    # waiting, running, ready
+  def __init__(self, sub_system_number, name, duration, resource1_usage, resource2_usage, entering_time, dest_cpu = None, period = None, prerequisite_task_name = None, recursion = None):
+    # waiting, running, ready, complete
     self.state = 'waiting'
 
     self.sub_system_number = sub_system_number
@@ -17,5 +17,6 @@ class Task:
 
     #sub3
     self.period = period
+    self.recursion = recursion
     
     self.prerequisite_task_name = prerequisite_task_name
