@@ -8,11 +8,14 @@ from resource_ import Resource_
 R_lock = threading.Lock()
 alive_lock = threading.Lock()
 wait_lock = threading.Lock()
+comp_lock = threading.Lock()
 
 waiting_queue = Queue()
 ready_queue1 = Queue()
 ready_queue2 = Queue()
 ready_queue3 = Queue()
+
+completed_tasks = []
 
 cores_finished = 0
 
@@ -72,7 +75,7 @@ def print_output(R1: Resource_, R2: Resource_, task1: Task, task2: Task, task3: 
     global ready_queue1, ready_queue2, ready_queue3
     print("Sub1:")
     print(f"\tR1: {R1.count} R2: {R2.count}")
-    print(f"\tWaiting Queue: {[task.name for task in list(waiting_queue.queue)]}")
+    print(f"\tWaiting Queue: {[task.name if task.entering_time<= globals.time_unit else '' for task in list(waiting_queue.queue)]}")
     
     print(f"\tCore1:")
     print(f"\t\tRunning Task: {task1.name if task1 and task1.state=='running' else 'idle'}")
@@ -85,6 +88,8 @@ def print_output(R1: Resource_, R2: Resource_, task1: Task, task2: Task, task3: 
     print(f"\tCore3:")
     print(f"\t\tRunning Task: {task3.name if task3 and task3.state=='running' else 'idle'}")
     print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue3.queue)]}")
+    print(f"\tCompleted Tasks: \n\t\t{[task.name if task.state=='completed' else '' for task in list(completed_tasks)]}")
+        
 
 def get_quantum(task: Task):
     return QUANTUM * task.weight
@@ -183,7 +188,7 @@ def core(index, resources: List[Resource_]):
                     R2.count -= task.resource2_usage
                 else:
                     task.state = 'waiting'
-                    waiting_queue.put(task)
+                    add_to_waiting_queue(task)
                     finish_wait(R1=R1, R2=R2, task1=core1_running_task, task2=core2_running_task, task3=core3_running_task)
                     R_lock.release()
                     continue
@@ -219,12 +224,14 @@ def core(index, resources: List[Resource_]):
                 prev_task = None
                 task.state = 'waiting'
                 # print(f"\n [WAITING QUEUE] Task {task.name} went back to WAITING QUEUE with {task.duration} time remaining")
-                waiting_queue.put(task)
+                add_to_waiting_queue(task)
             else:
                 prev_task = None
                 with alive_lock:
                     alive_tasks -= 1
                 task.state = 'completed'
+                with comp_lock:
+                    completed_tasks.append(task)
                 # print(f"\n [COMPLETED] Task {task.name} COMPLETED on core {index}")
                 
                 
@@ -241,10 +248,33 @@ def core(index, resources: List[Resource_]):
             print(f'{index} EXCEPTION:  {e}')
             break
 
-# Arrival time
-# Aging
+def add_to_waiting_queue(task: Task):
+    global waiting_queue
+    temp_list = []
+    while not waiting_queue.empty():
+        temp_list.append(waiting_queue.get())
+
+    temp_list.append(task)
+
+    temp_list.sort(key=lambda t: (t.age + t.entering_time))
+
+    for sorted_task in temp_list:
+        waiting_queue.put(sorted_task)
+        
+def increment_tasks_age():
+    global waiting_queue
+
+    temp_list = []
+    while not waiting_queue.empty():
+        task = waiting_queue.get()
+        if(task.entering_time <= globals.time_unit):
+            task.age=1
+        temp_list.append(task)
+
+    for task in temp_list:
+        add_to_waiting_queue(task)
+
 def subSystem1(resources: List[Resource_], tasks: List[Task]):
-    # return 
     global ready_queue1, ready_queue2, ready_queue3, waiting_queue, alive_tasks
     
     number_of_tasks = len(tasks)
@@ -252,6 +282,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     
     min_duration = min(task.duration for task in tasks)
     for task in tasks:
+        task.age=0
         task.weight = max(1, task.duration // min_duration)
         
     cores = []
@@ -263,7 +294,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     is_first = 0
     
     for task in tasks:
-        waiting_queue.put(task)
+        waiting_queue.put(task) 
         
     while True:
         with alive_lock:
@@ -278,8 +309,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
                 add_task_to_ready_queue(task, is_first < number_of_tasks)
                 is_first += 1
             else:
-                #######################
-                waiting_queue.put(task)
+                add_to_waiting_queue(task)
             
     for t in cores:
         t.join()
