@@ -65,9 +65,9 @@ def print_output(R1: Resource_, R2: Resource_, task1: Task, task2: Task):
     print(f"\tR1: {R1.count} R2: {R2.count}")
     print(f"\tReady Queue: {[task.name for task in list(ready_queue.queue)]}")
     print(f"\tCore1:")
-    print(f"\t\tRuning Task: {task1.name if task1 else 'idle'}")
+    print(f"\t\tRunning Task: {task1.name if task1 else 'idle'}")
     print(f"\tCore2:")
-    print(f"\t\tRuning Task: {task2.name if task2 else 'idle'}")
+    print(f"\t\tRunning Task: {task2.name if task2 else 'idle'}")
 
 def core(index, resources: List[Resource_]):
     global ready_queue, update_queue_var, core1_running_task, core2_running_task

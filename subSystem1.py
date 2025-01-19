@@ -69,18 +69,22 @@ def finish_wait(R1: Resource_, R2: Resource_, task1: Task, task2: Task, task3: T
     globals.wait_for_subsystems_finish_together()
 
 def print_output(R1: Resource_, R2: Resource_, task1: Task, task2: Task, task3: Task):
+    global ready_queue1, ready_queue2, ready_queue3
     print("Sub1:")
     print(f"\tR1: {R1.count} R2: {R2.count}")
     print(f"\tWaiting Queue: {[task.name for task in list(waiting_queue.queue)]}")
+    
     print(f"\tCore1:")
-    print(f"\t\tRuning Task: {task1.name if task1 else 'idle'}")
-    print(f"\t\tReady Queue: {[task.name for task in list(ready_queue1.queue)]}")
+    print(f"\t\tRunning Task: {task1.name if task1 and task1.state=='running' else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue1.queue)]}")
+    
     print(f"\tCore2:")
-    print(f"\t\tRuning Task: {task2.name if task2 else 'idle'}")
-    print(f"\t\tReady Queue: {[task.name for task in list(ready_queue2.queue)]}")
+    print(f"\t\tRunning Task: {task2.name if task2 and task2.state=='running' else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue2.queue)]}")
+    
     print(f"\tCore3:")
-    print(f"\t\tRuning Task: {task3.name if task3 else 'idle'}")
-    print(f"\t\tReady Queue: {[task.name for task in list(ready_queue3.queue)]}")
+    print(f"\t\tRunning Task: {task3.name if task3 and task3.state=='running' else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue3.queue)]}")
 
 def get_quantum(task: Task):
     return QUANTUM * task.weight
@@ -169,6 +173,7 @@ def core(index, resources: List[Resource_]):
                 task.state = 'running'
             else:
                 task = prev_task
+                task.state = 'running'
                 
             # print (f"\n [RUNNING] Task {task.name} is RUNNING on core {index}")
             with R_lock:
@@ -179,9 +184,8 @@ def core(index, resources: List[Resource_]):
                 else:
                     task.state = 'waiting'
                     waiting_queue.put(task)
-                    
                     finish_wait(R1=R1, R2=R2, task1=core1_running_task, task2=core2_running_task, task3=core3_running_task)
-                    
+                    R_lock.release()
                     continue
             
             if how_many_rounds < 0:
@@ -264,7 +268,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
     while True:
         with alive_lock:
             if alive_tasks == 0:
-                # print(f'\n [FINISHED] subsystem 1')
+                # print(f'\n +++++++++++++++++++++++++++ [FINISHED] subsystem 1')
                 break
             
         if not waiting_queue.empty():
