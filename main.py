@@ -77,7 +77,6 @@ def get_input():
     return resources, tasks
 
 def mainThread():
-  print('Hello from main thread!')
   resources, tasks = get_input()
   sub_system_threads = []
 
