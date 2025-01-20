@@ -108,6 +108,7 @@ def core(index, resources: List[Resource_]):
         finish_barrier.wait()
 
 def subSystem4(resources: List[Resource_], tasks: List[Task]):
+    return
     global ready_queue, waiting_queue
 
     for task in tasks:
