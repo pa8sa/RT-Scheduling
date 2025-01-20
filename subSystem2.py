@@ -132,6 +132,7 @@ def core(index, resources: List[Resource_]):
             pass
 
 def subSystem2(resources: List[Resource_], tasks: List[Task]):
+    return
     global ready_queue, update_queue_var
     
     for task in tasks:

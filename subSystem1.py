@@ -240,7 +240,7 @@ def core(index, resources: List[Resource_]):
 # Arrival time
 # Aging
 def subSystem1(resources: List[Resource_], tasks: List[Task]):
-    # return 
+    return 
     global ready_queue1, ready_queue2, ready_queue3, waiting_queue, alive_tasks
     
     number_of_tasks = len(tasks)
