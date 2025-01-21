@@ -38,7 +38,7 @@ def wait_for_print():
 
 def print_output():
     global glob_R1, glob_R2, glob_task1, glob_task2, glob_task3, ready_queue1, ready_queue2, ready_queue3, waiting_queue, completed_tasks
-    print("------------------------------------------------- time unit: ", globals.time_unit, "-------------------------------------------------")
+    print("------------------------------------------------- time unit:", globals.time_unit, "-------------------------------------------------")
     print("Sub1:")
     print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
     print(f"\tWaiting Queue: {[task.name if task.entering_time<= globals.time_unit else '' for task in list(waiting_queue.queue)]}")

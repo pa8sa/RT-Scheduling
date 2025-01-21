@@ -22,19 +22,18 @@ queue_lock = threading.Lock()
 R_lock = threading.Lock()
 
 def wait_for_print():
-    # while globals.print_turn != 4:
-    #     pass
+    while globals.print_turn != 4:
+        pass
 
     print_output()
     
-    # globals.print_turn_lock.acquire()
-    # globals.print_turn %= 4
-    # globals.print_turn += 1
-    # globals.print_turn_lock.release()
+    globals.print_turn_lock.acquire()
+    globals.print_turn %= 4
+    globals.print_turn += 1
+    globals.print_turn_lock.release()
 
 def print_output():
     global glob_R1, glob_R2, glob_task1, glob_task2
-    print(f"-------------------------Time Unit: {globals.time_unit}-------------------------")
     print("Sub4:")
     print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
     print(f"\tWaiting Queue: {[task.name for task in list(waiting_queue.queue)]}")
