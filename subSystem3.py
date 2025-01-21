@@ -5,13 +5,9 @@ import copy
 from task import Task
 from resource_ import Resource_
 
-time_unit = -1
-
-def increment_time_unit():
-    global time_unit
-    time_unit+=1
-    
-start_barrier = threading.Barrier(1, increment_time_unit)
+glob_R1: Resource_ = None
+glob_R2: Resource_ = None
+glob_task1: Task = None
 
 r_lock = threading.Lock()
 ready_queue = []
@@ -23,6 +19,27 @@ tasks_global = []
     T32     1           2               3                0            5         2
     
 '''
+
+def wait_for_print():
+    while globals.print_turn != 3:
+        pass
+
+    print_output()
+    
+    globals.print_turn_lock.acquire()
+    globals.print_turn %= 4
+    globals.print_turn += 1
+    globals.print_turn_lock.release()
+
+def print_output():
+    global glob_R1, glob_R2, glob_task1, ready_queue
+    print("Sub3:")
+    print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
+    print(f"\tReady Queue: {[task.name for task in list(ready_queue)]}")
+    print(f"\tCore1:")
+    print(f"\t\tRunning Task: {glob_task1.name if glob_task1 else 'idle'}")
+
+finish_barrier = threading.Barrier(1, action=wait_for_print)
 
 def add_to_ready_queue(task: Task):
     with r_lock:
@@ -45,7 +62,7 @@ def check_for_tasks():
     # print(f'\n[GLOBAL TASKS] {[(task.name, task.duration, task.entering_time, task.state) for task in tasks_global]}\n')
     
     for t in tasks_global:
-        if (t.entering_time <= time_unit and 
+        if (t.entering_time <= globals.time_unit and 
             t.state != 'completed' and 
             t.state != 'running' and 
             t.name not in [task.name for task in ready_queue]):
@@ -54,10 +71,10 @@ def check_for_tasks():
             add_to_ready_queue(copy.deepcopy(t))
     
     for t in ready_queue:
-        if t.entering_time > time_unit:
+        if t.entering_time > globals.time_unit:
             with r_lock:
                 ready_queue.pop(t) 
-            
+
 def add_to_global(task: Task):
     global tasks_global
     for i, t in enumerate(tasks_global):
@@ -65,15 +82,16 @@ def add_to_global(task: Task):
             task.duration = t.duration
             tasks_global[i] = copy.deepcopy(task)
             break
-    
 
 def core(resources: List[Resource_]):
+    global glob_R1, glob_R2, glob_task1, ready_queue, tasks_global
     prev_task = None
     while True:
-        start_barrier.wait()
+        if globals.time_unit == globals.breaking_point:
+            return
+        
+        globals.global_start_barrier.wait()
         # print(f'========================================================================================================= time_unit {time_unit}')
-        if time_unit > 15:
-            break
         
         check_for_tasks()
         
@@ -85,6 +103,10 @@ def core(resources: List[Resource_]):
             # print(f'\n[READY QUEUE] {[(task.name, task.duration, task.entering_time, task.state) for task in ready_queue]}\n')
         
             if (len(ready_queue) == 0 and prev_task is None):
+                glob_task1 = None
+                
+                finish_barrier.wait()
+                globals.global_finish_barrier.wait()
                 continue
             
         if prev_task is not None:
@@ -100,14 +122,16 @@ def core(resources: List[Resource_]):
             task = ready_queue.pop(0)
             
         task.state = 'running'
-        # print(f'\n[RUNNING] TIME: {time_unit} - {task.name} duration: {task.duration}  recursion: {task.recursion} state: {task.state}\n')
+        # print(f'\n[RUNNING] TIME: {globals.time_unit} - {task.name} duration: {task.duration}  recursion: {task.recursion} state: {task.state}\n')
         
         task.duration -= 1
+
+        glob_task1 = task
         
         if task.duration == 0:
             task.recursion -= 1
             if task.recursion >= 1:
-                task.entering_time = ((time_unit // task.period) + 1) * task.period
+                task.entering_time = ((globals.time_unit // task.period) + 1) * task.period
                 task.state = 'ready'
                 add_to_global(task)
                 
@@ -123,11 +147,12 @@ def core(resources: List[Resource_]):
             # print(f'\n[WENT FOR NEXT ROUND] TIME:{time_unit} {task.name}  duration: {task.duration} entering_time: {task.entering_time} {task.state}\n')
             prev_task = task
             
-            
+        finish_barrier.wait()
+        globals.global_finish_barrier.wait()
+
 def subSystem3(resources: List[Resource_], tasks: List[Task]):
-    global time_unit, tasks_global
+    global tasks_global
     # print(is_schedulable(tasks))
-    # return 
     
     t = threading.Thread(target=core, args=(resources,))
     t.start()

@@ -5,6 +5,12 @@ from queue import Queue
 from task import Task
 from resource_ import Resource_
 
+glob_R1: Resource_ = None
+glob_R2: Resource_ = None
+glob_task1: Task = None
+glob_task2: Task = None
+glob_task3: Task = None
+
 R_lock = threading.Lock()
 alive_lock = threading.Lock()
 wait_lock = threading.Lock()
@@ -19,9 +25,38 @@ completed_tasks = []
 
 cores_finished = 0
 
-core1_running_task: Task = None
-core2_running_task: Task = None
-core3_running_task: Task = None
+def wait_for_print():
+    while globals.print_turn != 1:
+        pass
+
+    print_output()
+    
+    globals.print_turn_lock.acquire()
+    globals.print_turn %= 4
+    globals.print_turn += 1
+    globals.print_turn_lock.release()
+
+def print_output():
+    global glob_R1, glob_R2, glob_task1, glob_task2, glob_task3, ready_queue1, ready_queue2, ready_queue3, waiting_queue, completed_tasks
+    print("------------------------------------------------- time unit: ", globals.time_unit, "-------------------------------------------------")
+    print("Sub1:")
+    print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
+    print(f"\tWaiting Queue: {[task.name if task.entering_time<= globals.time_unit else '' for task in list(waiting_queue.queue)]}")
+    
+    print(f"\tCore1:")
+    print(f"\t\tRunning Task: {glob_task1.name if glob_task1 else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue1.queue)]}")
+    
+    print(f"\tCore2:")
+    print(f"\t\tRunning Task: {glob_task2.name if glob_task2 else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue2.queue)]}")
+    
+    print(f"\tCore3:")
+    print(f"\t\tRunning Task: {glob_task3.name if glob_task3 else 'idle'}")
+    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue3.queue)]}")
+    print(f"\tCompleted Tasks: \n\t\t{[task.name if task.state=='completed' else '' for task in list(completed_tasks)]}")
+
+finish_barrier = threading.Barrier(3, action=wait_for_print)
 
 index_to_ready_queue = {
     0: ready_queue1,
@@ -30,66 +65,6 @@ index_to_ready_queue = {
 }
 
 QUANTUM = 1
-
-def start_wait(index):
-    globals.subsystems_ready_cycle_lock.acquire()
-    globals.sys1_ready_threads_lock.acquire()
-
-    pull_migration(index)
-    globals.sys1_ready_threads += 1
-    if globals.sys1_ready_threads == 3:
-        push_migration()
-        globals.sys1_finish_threads = 0 + cores_finished
-        if globals.subsystems_ready_cycle == 1:
-            globals.subsystems_finish_cycle = 0
-            globals.time_unit += 1
-            print(f"---------------------------------------------------------------------------------------- time unit: {globals.time_unit}")
-        globals.subsystems_ready_cycle += 1
-
-    globals.sys1_ready_threads_lock.release()
-    globals.subsystems_ready_cycle_lock.release()
-    
-    globals.wait_for_subsystems_start_together()
-
-def finish_wait(R1: Resource_, R2: Resource_, task1: Task, task2: Task, task3: Task):
-    globals.subsystems_finish_cycle_lock.acquire()
-    globals.sys1_finish_threads_lock.acquire()
-
-    globals.sys1_finish_threads += 1
-    if globals.sys1_finish_threads == 3:
-        globals.sys1_ready_threads = 0 + cores_finished
-        if globals.subsystems_finish_cycle == 1:
-            globals.subsystems_ready_cycle = 0
-        print_output(R1=R1, R2=R2, task1=task1, task2=task2, task3=task3)
-        globals.print_output_turn_lock.acquire()
-        globals.print_output_turn = 2
-        globals.print_output_turn_lock.release()
-        globals.subsystems_finish_cycle += 1
-
-    globals.sys1_finish_threads_lock.release()
-    globals.subsystems_finish_cycle_lock.release()
-
-    globals.wait_for_subsystems_finish_together()
-
-def print_output(R1: Resource_, R2: Resource_, task1: Task, task2: Task, task3: Task):
-    global ready_queue1, ready_queue2, ready_queue3
-    print("Sub1:")
-    print(f"\tR1: {R1.count} R2: {R2.count}")
-    print(f"\tWaiting Queue: {[task.name if task.entering_time<= globals.time_unit else '' for task in list(waiting_queue.queue)]}")
-    
-    print(f"\tCore1:")
-    print(f"\t\tRunning Task: {task1.name if task1 and task1.state=='running' else 'idle'}")
-    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue1.queue)]}")
-    
-    print(f"\tCore2:")
-    print(f"\t\tRunning Task: {task2.name if task2 and task2.state=='running' else 'idle'}")
-    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue2.queue)]}")
-    
-    print(f"\tCore3:")
-    print(f"\t\tRunning Task: {task3.name if task3 and task3.state=='running' else 'idle'}")
-    print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue3.queue)]}")
-    print(f"\tCompleted Tasks: \n\t\t{[task.name if task.state=='completed' else '' for task in list(completed_tasks)]}")
-        
 
 def get_quantum(task: Task):
     return QUANTUM * task.weight
@@ -105,7 +80,7 @@ def add_task_to_ready_queue(task: Task, is_first):
         
         index_to_ready_queue[chosen_core].put(task)
         task.state = 'ready'
-        
+
 def push_migration():
     global ready_queue1, ready_queue2, ready_queue3
     
@@ -131,7 +106,7 @@ def push_migration():
             # print(
             #     f"\n [PUSH MIGRATION] Task {task.name} migrated from core {max_load_core} to core {min_load_core} for load balancing."
             # )
-    
+
 def pull_migration(core_index):
     ready_queue = index_to_ready_queue[core_index]
     if not ready_queue.empty():
@@ -154,23 +129,35 @@ def pull_migration(core_index):
         # )
 
 def core(index, resources: List[Resource_]):
-    global waiting_queue, alive_tasks, cores_finished, core1_running_task, core2_running_task, core3_running_task
+    global waiting_queue, alive_tasks, cores_finished, glob_R1, glob_R2, glob_task1, glob_task2, glob_task3
     
     how_many_rounds = -1
     prev_task = None
     
     while True:
-        if globals.time_unit == 40:
+        if globals.time_unit == globals.breaking_point:
             return
         ready_queue = index_to_ready_queue[index]
         try:
-            start_wait(index)
+            globals.global_start_barrier.wait()
             #! ============================================================= START ===================================================================
             
             R1 = resources[0]
             R2 = resources[1]
+
+            glob_R1 = R1
+            glob_R2 = R2
+
             if ready_queue.empty() and prev_task is None:
-                finish_wait(R1=R1, R2=R2, task1=core1_running_task, task2=core2_running_task, task3=core3_running_task)
+                if index == 0:
+                    glob_task1 = None
+                elif index == 1:
+                    glob_task2 = None
+                elif index == 2:
+                    glob_task3 = None
+                
+                finish_barrier.wait()
+                globals.global_finish_barrier.wait()
                 continue
             
             if prev_task is None:
@@ -189,7 +176,16 @@ def core(index, resources: List[Resource_]):
                 else:
                     task.state = 'waiting'
                     add_to_waiting_queue(task)
-                    finish_wait(R1=R1, R2=R2, task1=core1_running_task, task2=core2_running_task, task3=core3_running_task)
+
+                    if index == 0:
+                        glob_task1 = None
+                    elif index == 1:
+                        glob_task2 = None
+                    elif index == 2:
+                        glob_task3 = None
+
+                    finish_barrier.wait()
+                    globals.global_finish_barrier.wait()
                     R_lock.release()
                     continue
             
@@ -203,11 +199,11 @@ def core(index, resources: List[Resource_]):
             how_many_rounds -= 1
             
             if index == 0:
-                core1_running_task = task
+                glob_task1 = task
             elif index == 1:
-                core2_running_task = task
+                glob_task2 = task
             elif index == 2:
-                core3_running_task = task
+                glob_task3 = task
 
             with R_lock:
                 R1.count += task.resource1_usage
@@ -235,16 +231,14 @@ def core(index, resources: List[Resource_]):
                 # print(f"\n [COMPLETED] Task {task.name} COMPLETED on core {index}")
                 
                 
-            finish_wait(R1=R1, R2=R2, task1=core1_running_task, task2=core2_running_task, task3=core3_running_task)
+            finish_barrier.wait()
+            globals.global_finish_barrier.wait()
             #! ============================================================= END ===================================================================
             
         except Exception as e:
             cores_finished += 1
-            globals.sys1_finish_threads_lock.acquire()
-            if globals.sys1_finish_threads == 2:
-                globals.sys1_ready_threads = 0 + cores_finished
-            globals.sys1_finish_threads += 1
-            globals.sys1_finish_threads_lock.release()
+            finish_barrier.wait()
+            globals.global_finish_barrier.wait()
             print(f'{index} EXCEPTION:  {e}')
             break
 
@@ -260,7 +254,7 @@ def add_to_waiting_queue(task: Task):
 
     for sorted_task in temp_list:
         waiting_queue.put(sorted_task)
-        
+
 def increment_tasks_age():
     global waiting_queue
 

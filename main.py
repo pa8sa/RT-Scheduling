@@ -53,8 +53,8 @@ def get_input():
     subSystem3Tasks = []
     while lines[i] != '$\n':
       sub_system_number = 3
-      name, duration, resource1_usage, resource2_usage, entering_time = lines[i].strip().split(' ')
-      task = Task(sub_system_number, name, int(duration), int(resource1_usage), int(resource2_usage), int(entering_time))
+      name, duration, resource1_usage, resource2_usage, entering_time, period, recursion = lines[i].strip().split(' ')
+      task = Task(sub_system_number, name, int(duration), int(resource1_usage), int(resource2_usage), int(entering_time), period=int(period), recursion=int(recursion))
       subSystem3Tasks.append(task)
       i += 1
       

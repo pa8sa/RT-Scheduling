@@ -5,32 +5,10 @@ from queue import Queue
 from task import Task
 from resource_ import Resource_
 
-timeunit = -1
-
 glob_R1: Resource_ = None
 glob_R2: Resource_ = None
 glob_task1: Task = None
 glob_task2: Task = None
-
-def print_output():
-    global timeunit, glob_R1, glob_R2, glob_task1, glob_task2
-    print("---------------------------------------- time unit: ", timeunit)
-    print("Sub4:")
-    print(f"\tR1: {glob_R1.count if glob_R1 else None} R2: {glob_R2.count if glob_R2 else None}")
-    print(f"\tWaiting Queue: {[task.name for task in list(waiting_queue.queue)]}")
-    print(f"\tReady Queue: {[task.name for task in list(ready_queue.queue)]}")
-    print(f"\tReady Queue: {[task.duration for task in list(ready_queue.queue)]}")
-    print(f"\tCore1:")
-    print(f"\t\tRuning Task: {glob_task1.name if glob_task1 else 'idle'}")
-    print(f"\tCore2:")
-    print(f"\t\tRuning Task: {glob_task2.name if glob_task2 else 'idle'}")
-
-def increment_time_unit():
-    global timeunit
-    timeunit += 1
-
-start_barrier = threading.Barrier(2, increment_time_unit)
-finish_barrier = threading.Barrier(2, print_output)
 
 ready_queue = Queue()
 waiting_queue = Queue()
@@ -38,14 +16,40 @@ waiting_queue = Queue()
 queue_lock = threading.Lock()
 R_lock = threading.Lock()
 
+def wait_for_print():
+    while globals.print_turn != 4:
+        pass
+
+    print_output()
+    
+    globals.print_turn_lock.acquire()
+    globals.print_turn %= 4
+    globals.print_turn += 1
+    globals.print_turn_lock.release()
+
+def print_output():
+    global glob_R1, glob_R2, glob_task1, glob_task2
+    print("Sub4:")
+    print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
+    print(f"\tWaiting Queue: {[task.name for task in list(waiting_queue.queue)]}")
+    print(f"\tReady Queue: {[task.name for task in list(ready_queue.queue)]}")
+    print(f"\tReady Queue: {[task.duration for task in list(ready_queue.queue)]}")
+    print(f"\tCore1:")
+    print(f"\t\tRunning Task: {glob_task1.name if glob_task1 else 'idle'}")
+    print(f"\tCore2:")
+    print(f"\t\tRunning Task: {glob_task2.name if glob_task2 else 'idle'}")
+
+finish_barrier = threading.Barrier(2, action=wait_for_print)
+
 def core(index, resources: List[Resource_]):
-    global ready_queue, waiting_queue, timeunit, glob_R1, glob_R2, glob_task1, glob_task2
+    # return
+    global ready_queue, waiting_queue, glob_R1, glob_R2, glob_task1, glob_task2
     
     while True:
-        if timeunit == 8:
+        if globals.time_unit == globals.breaking_point:
             return
         
-        start_barrier.wait()
+        globals.global_start_barrier.wait()
         
         R1 = resources[0]
         R2 = resources[1]
@@ -65,6 +69,7 @@ def core(index, resources: List[Resource_]):
                 
             queue_lock.release()
             finish_barrier.wait()
+            globals.global_finish_barrier.wait()
             continue
         queue_lock.release()
         
@@ -85,6 +90,7 @@ def core(index, resources: List[Resource_]):
             
             R_lock.release()
             finish_barrier.wait()
+            globals.global_finish_barrier.wait()
             
             continue
         R_lock.release()
@@ -106,9 +112,9 @@ def core(index, resources: List[Resource_]):
             ready_queue.put(task)
         
         finish_barrier.wait()
+        globals.global_finish_barrier.wait()
 
 def subSystem4(resources: List[Resource_], tasks: List[Task]):
-    return
     global ready_queue, waiting_queue
 
     for task in tasks:

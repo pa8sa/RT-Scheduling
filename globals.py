@@ -2,30 +2,14 @@ import threading
 
 time_unit = -1
 
-print_output_turn = 1
-print_output_turn_lock = threading.Lock()
+breaking_point = 20
 
-subsystems_ready_cycle = 0
-subsystems_finish_cycle = 0
-subsystems_ready_cycle_lock = threading.Lock()
-subsystems_finish_cycle_lock = threading.Lock()
+def increment_time_unit():
+  global time_unit
+  time_unit += 1
 
-sys1_ready_threads = 0
-sys1_finish_threads = 0
-sys1_ready_threads_lock = threading.Lock()
-sys1_finish_threads_lock = threading.Lock()
+global_start_barrier = threading.Barrier(8, action=increment_time_unit)
+global_finish_barrier = threading.Barrier(8)
 
-sys2_ready_threads = 0
-sys2_finish_threads = 0
-sys2_ready_threads_lock = threading.Lock()
-sys2_finish_threads_lock = threading.Lock()
-
-def wait_for_subsystems_start_together():
-  while True:
-    if subsystems_ready_cycle == 2:
-      break
-
-def wait_for_subsystems_finish_together():
-  while True:
-    if subsystems_finish_cycle == 2:
-      break
+print_turn = 1
+print_turn_lock = threading.Lock()
