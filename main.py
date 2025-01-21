@@ -65,7 +65,7 @@ def get_input():
     while lines[i] != '$':
       sub_system_number = 4
       name, duration, resource1_usage, resource2_usage, entering_time, prerequisite_task_name = lines[i].strip().split(' ')
-      task = Task(sub_system_number, name, int(duration), int(resource1_usage), int(resource2_usage), int(entering_time), prerequisite_task_name=None if prerequisite_task_name == '-' else prerequisite_task_name)
+      task = Task(sub_system_number, name, int(duration), int(resource1_usage), int(resource2_usage), int(entering_time), prerequisite_task_name = None if prerequisite_task_name == '-' else prerequisite_task_name)
       subSystem4Tasks.append(task)
       i += 1
 
