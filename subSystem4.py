@@ -67,7 +67,7 @@ def update_queue():
 finish_barrier = threading.Barrier(2, action=wait_for_print)
 
 def core(index, resources: List[Resource_]):
-    # return
+    return
     global ready_queue, waiting_queue, glob_R1, glob_R2, glob_task1, glob_task2
     
     while True:

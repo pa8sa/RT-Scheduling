@@ -269,6 +269,7 @@ def increment_tasks_age():
         add_to_waiting_queue(task)
 
 def subSystem1(resources: List[Resource_], tasks: List[Task]):
+    return
     global ready_queue1, ready_queue2, ready_queue3, waiting_queue, alive_tasks
     
     number_of_tasks = len(tasks)

@@ -21,15 +21,15 @@ tasks_global = []
 '''
 
 def wait_for_print():
-    while globals.print_turn != 3:
-        pass
-
+    # while globals.print_turn != 3:
+    #     pass
+    print(f'==================================================== Time unit: {globals.time_unit}')
     print_output()
     
-    globals.print_turn_lock.acquire()
-    globals.print_turn %= 4
-    globals.print_turn += 1
-    globals.print_turn_lock.release()
+    # globals.print_turn_lock.acquire()
+    # globals.print_turn %= 4
+    # globals.print_turn += 1
+    # globals.print_turn_lock.release()
 
 def print_output():
     global glob_R1, glob_R2, glob_task1, ready_queue
