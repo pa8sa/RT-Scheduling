@@ -5,14 +5,10 @@ from queue import Queue
 from task import Task
 from resource_ import Resource_
 
-glob_R1: Resource_ = None
-glob_R2: Resource_ = None
 glob_task1: Task = None
 glob_task2: Task = None
 
 ready_queue = Queue()
-
-R_lock = threading.Lock()
 
 queue_lock = threading.Lock()
 
@@ -31,9 +27,9 @@ def wait_for_print():
     globals.print_turn_lock.release()
 
 def print_output():
-    global glob_R1, glob_R2, glob_task1, glob_task2, ready_queue
+    global glob_task1, glob_task2, ready_queue
     print("Sub2:")
-    print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
+    print(f"\tR1: {globals.sub2_resources[0].count if globals.sub2_resources[0] else '-'} R2: {globals.sub2_resources[1].count if globals.sub2_resources[1] else '-'}")
     print(f"\tReady Queue: {[task.name for task in list(ready_queue.queue)]}")
     print(f"\tEach Durations: {[task.duration for task in list(ready_queue.queue)]}")
     print(f"\tCore1:")
@@ -45,8 +41,8 @@ def print_output():
 
 finish_barrier = threading.Barrier(2, action=wait_for_print)
 
-def core(index, resources: List[Resource_]):
-    global ready_queue, update_queue_var, glob_R1, glob_R2, glob_task1, glob_task2
+def core(index):
+    global ready_queue, update_queue_var, glob_task1, glob_task2
 
     while True:
         if globals.time_unit == globals.breaking_point:
@@ -64,11 +60,8 @@ def core(index, resources: List[Resource_]):
             for _ in range(10000000):
                 pass
 
-            R1 = resources[0]
-            R2 = resources[1]
-
-            glob_R1 = R1
-            glob_R2 = R2
+            R1 = globals.sub2_resources[0]
+            R2 = globals.sub2_resources[1]
 
             queue_lock.acquire()
             if not ready_queue.empty():
@@ -86,7 +79,7 @@ def core(index, resources: List[Resource_]):
                 continue
             queue_lock.release()
             
-            R_lock.acquire()
+            globals.sub2_resource_lock.acquire()
             if task.resource1_usage <= R1.count and task.resource2_usage <= R2.count:
                 R1.count -= task.resource1_usage
                 R2.count -= task.resource2_usage
@@ -96,7 +89,7 @@ def core(index, resources: List[Resource_]):
                         R1.count -= task.resource1_usage
                         R2.count -= task.resource2_usage
                         break
-            R_lock.release()
+            globals.sub2_resource_lock.release()
 
             task.duration -= 1
             # print(f"\nTask {task.name} on core {index} with {task.duration} time remaining")
@@ -106,10 +99,10 @@ def core(index, resources: List[Resource_]):
             elif index == 1:
                 glob_task2 = task
             
-            R_lock.acquire()
+            globals.sub2_resource_lock.acquire()
             R1.count += task.resource1_usage
             R2.count += task.resource2_usage
-            R_lock.release()
+            globals.sub2_resource_lock.release()
 
             if task.duration == 0:
                 task.state = 'completed'
@@ -123,8 +116,7 @@ def core(index, resources: List[Resource_]):
             print(e)
             pass
 
-def subSystem2(resources: List[Resource_], tasks: List[Task]):
-    return
+def subSystem2(tasks: List[Task]):
     global ready_queue, update_queue_var
     
     for task in tasks:
@@ -139,7 +131,7 @@ def subSystem2(resources: List[Resource_], tasks: List[Task]):
 
     cores = []
     for i in range(2):
-        t = threading.Thread(target=core, args=(i, resources))
+        t = threading.Thread(target=core, args=(i, ))
         cores.append(t)
         t.start()
         

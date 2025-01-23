@@ -5,6 +5,7 @@ from subSystem1 import subSystem1
 from subSystem2 import subSystem2
 from subSystem3 import subSystem3
 from subSystem4 import subSystem4
+import globals
 
 iToSubMap = {
   0: subSystem1,
@@ -79,10 +80,15 @@ def get_input():
 def mainThread():
   resources, tasks = get_input()
   sub_system_threads = []
+  
+  globals.sub1_resources = resources[0]
+  globals.sub2_resources = resources[1]
+  globals.sub3_resources = resources[2]
+  globals.sub4_resources = resources[3]
 
   for i in range(4):
-    subSystem = iToSubMap[i]
-    t = threading.Thread(target=subSystem, args=(resources[i], tasks[i]))
+    t = threading.Thread(target=iToSubMap[i], args=(tasks[i], ))
+      
     sub_system_threads.append(t)
     t.start()
         

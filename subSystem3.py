@@ -5,8 +5,6 @@ import copy
 from task import Task
 from resource_ import Resource_
 
-glob_R1: Resource_ = None
-glob_R2: Resource_ = None
 glob_task1: Task = None
 
 r_lock = threading.Lock()
@@ -21,20 +19,20 @@ tasks_global = []
 '''
 
 def wait_for_print():
-    # while globals.print_turn != 3:
-    #     pass
-    print(f'==================================================== Time unit: {globals.time_unit}')
+    while globals.print_turn != 3:
+        pass
+    # print(f'==================================================== Time unit: {globals.time_unit}')
     print_output()
     
-    # globals.print_turn_lock.acquire()
-    # globals.print_turn %= 4
-    # globals.print_turn += 1
-    # globals.print_turn_lock.release()
+    globals.print_turn_lock.acquire()
+    globals.print_turn %= 4
+    globals.print_turn += 1
+    globals.print_turn_lock.release()
 
 def print_output():
-    global glob_R1, glob_R2, glob_task1, ready_queue
+    global glob_task1, ready_queue
     print("Sub3:")
-    print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
+    print(f"\tR1: {globals.sub3_resources[0].count if globals.sub3_resources else '-'} R2: {globals.sub3_resources[1].count if globals.sub3_resources else '-'}")
     print(f"\tReady Queue: {[task.name for task in list(ready_queue)]}")
     print(f"\tCore1:")
     print(f"\t\tRunning Task: {glob_task1.name if glob_task1 else 'idle'}")
@@ -47,16 +45,6 @@ def add_to_ready_queue(task: Task):
             return
         ready_queue.append(task)
         ready_queue.sort(key=lambda task: task.priority, reverse=True)
-
-def is_schedulable(tasks: List[Task]):
-    sorted_tasks = sorted(tasks, key=lambda task: task.period)
-    util = 0.0
-    N = len(sorted_tasks)
-    for i, task in enumerate(sorted_tasks):
-        util += task.duration / task.period
-        if util > N * (2**(1/N) - 1):
-            return False
-    return True
 
 def check_for_tasks():
     # print(f'\n[GLOBAL TASKS] {[(task.name, task.duration, task.entering_time, task.state) for task in tasks_global]}\n')
@@ -84,7 +72,7 @@ def add_to_global(task: Task):
             break
 
 def core(resources: List[Resource_]):
-    global glob_R1, glob_R2, glob_task1, ready_queue, tasks_global
+    global glob_task1, ready_queue, tasks_global
     prev_task = None
     while True:
         if globals.time_unit == globals.breaking_point:
@@ -150,11 +138,23 @@ def core(resources: List[Resource_]):
         finish_barrier.wait()
         globals.global_finish_barrier.wait()
 
-def subSystem3(resources: List[Resource_], tasks: List[Task]):
+def is_schedulable(tasks: List[Task]):
+    sorted_tasks = sorted(tasks, key=lambda task: task.period)
+    util = 0.0
+    N = len(sorted_tasks)
+    for i, task in enumerate(sorted_tasks):
+        util += task.duration / task.period
+        if util > N * (2**(1/N) - 1):
+            return False
+    return True
+
+def subSystem3(tasks: List[Task]):
     global tasks_global
     # print(is_schedulable(tasks))
     
-    t = threading.Thread(target=core, args=(resources,))
+    my_resources = globals.sub3_resources
+    
+    t = threading.Thread(target=core, args=(my_resources,))
     t.start()
     
     for task in tasks:

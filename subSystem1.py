@@ -5,13 +5,10 @@ from queue import Queue
 from task import Task
 from resource_ import Resource_
 
-glob_R1: Resource_ = None
-glob_R2: Resource_ = None
 glob_task1: Task = None
 glob_task2: Task = None
 glob_task3: Task = None
 
-R_lock = threading.Lock()
 alive_lock = threading.Lock()
 wait_lock = threading.Lock()
 comp_lock = threading.Lock()
@@ -37,10 +34,10 @@ def wait_for_print():
     globals.print_turn_lock.release()
 
 def print_output():
-    global glob_R1, glob_R2, glob_task1, glob_task2, glob_task3, ready_queue1, ready_queue2, ready_queue3, waiting_queue, completed_tasks
+    global glob_task1, glob_task2, glob_task3, ready_queue1, ready_queue2, ready_queue3, waiting_queue, completed_tasks
     print("------------------------------------------------- time unit:", globals.time_unit, "-------------------------------------------------")
     print("Sub1:")
-    print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
+    print(f"\tR1: {globals.sub1_resources[0].count if globals.sub1_resources[0] else '-'} R2: {globals.sub1_resources[1].count if globals.sub1_resources[1] else '-'}")
     print(f"\tWaiting Queue: {[task.name if task.entering_time<= globals.time_unit else '' for task in list(waiting_queue.queue)]}")
     
     print(f"\tCore1:")
@@ -128,8 +125,8 @@ def pull_migration(core_index):
         #     f"\n [PULL MIGRATION] Task {task.name} migrated from core {max_load_core} to core {core_index} for load balancing."
         # )
 
-def core(index, resources: List[Resource_]):
-    global waiting_queue, alive_tasks, cores_finished, glob_R1, glob_R2, glob_task1, glob_task2, glob_task3
+def core(index):
+    global waiting_queue, alive_tasks, cores_finished, glob_task1, glob_task2, glob_task3
     
     how_many_rounds = -1
     prev_task = None
@@ -142,11 +139,8 @@ def core(index, resources: List[Resource_]):
             globals.global_start_barrier.wait()
             #! ============================================================= START ===================================================================
             
-            R1 = resources[0]
-            R2 = resources[1]
-
-            glob_R1 = R1
-            glob_R2 = R2
+            R1 = globals.sub1_resources[0]
+            R2 = globals.sub1_resources[1]
 
             if ready_queue.empty() and prev_task is None:
                 if index == 0:
@@ -168,8 +162,7 @@ def core(index, resources: List[Resource_]):
                 task.state = 'running'
                 
             # print (f"\n [RUNNING] Task {task.name} is RUNNING on core {index}")
-            with R_lock:
-                
+            with globals.sub1_resource_lock:
                 if task.resource1_usage <= R1.count and task.resource2_usage <= R2.count:
                     R1.count -= task.resource1_usage
                     R2.count -= task.resource2_usage
@@ -186,7 +179,7 @@ def core(index, resources: List[Resource_]):
 
                     finish_barrier.wait()
                     globals.global_finish_barrier.wait()
-                    R_lock.release()
+                    globals.sub1_resource_lock.release()
                     continue
             
             if how_many_rounds < 0:
@@ -205,7 +198,7 @@ def core(index, resources: List[Resource_]):
             elif index == 2:
                 glob_task3 = task
 
-            with R_lock:
+            with globals.sub1_resource_lock:
                 R1.count += task.resource1_usage
                 R2.count += task.resource2_usage
             
@@ -268,8 +261,7 @@ def increment_tasks_age():
     for task in temp_list:
         add_to_waiting_queue(task)
 
-def subSystem1(resources: List[Resource_], tasks: List[Task]):
-    return
+def subSystem1(tasks: List[Task]):
     global ready_queue1, ready_queue2, ready_queue3, waiting_queue, alive_tasks
     
     number_of_tasks = len(tasks)
@@ -282,7 +274,7 @@ def subSystem1(resources: List[Resource_], tasks: List[Task]):
         
     cores = []
     for i in range(3):
-        t = threading.Thread(target=core, args=(i,resources))
+        t = threading.Thread(target=core, args=(i,))
         cores.append(t)
         t.start()
     

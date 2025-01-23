@@ -67,7 +67,6 @@ def update_queue():
 finish_barrier = threading.Barrier(2, action=wait_for_print)
 
 def core(index, resources: List[Resource_]):
-    return
     global ready_queue, waiting_queue, glob_R1, glob_R2, glob_task1, glob_task2
     
     while True:
@@ -181,11 +180,11 @@ def core(index, resources: List[Resource_]):
         finish_barrier.wait()
         globals.global_finish_barrier.wait()
 
-def subSystem4(resources: List[Resource_], tasks: List[Task]):
+def subSystem4(tasks: List[Task]):
     global ready_queue, waiting_queue, all_tasks
+    resources = globals.sub4_resources
 
     all_tasks = tasks
-
     for task in tasks:
         if task.entering_time == 0:
             ready_queue.put(task)
