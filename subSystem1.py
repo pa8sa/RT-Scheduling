@@ -90,6 +90,7 @@ def print_output():
     print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue3.queue)]}")
     print(f"\tCompleted Tasks: \n\t\t{[task.name if task.state=='completed' else '' for task in list(completed_tasks)]}")
     
+    
     read_from_waiting_queue()
 
 finish_barrier = threading.Barrier(3, action=wait_for_print)
@@ -164,8 +165,6 @@ def core(index):
         ready_queue = index_to_ready_queue[index]
         try:
             globals.global_start_barrier.wait()
-            #! ============================================================= START ===================================================================
-            
             R1 = globals.sub1_resources[0]
             R2 = globals.sub1_resources[1]
 
@@ -176,7 +175,6 @@ def core(index):
                     glob_task2 = None
                 elif index == 2:
                     glob_task3 = None
-                
                 finish_barrier.wait()
                 globals.global_finish_barrier.wait()
                 continue
@@ -206,7 +204,6 @@ def core(index):
 
                     finish_barrier.wait()
                     globals.global_finish_barrier.wait()
-                    globals.sub1_resource_lock.release()
                     continue
             
             if how_many_rounds < 0:
@@ -250,10 +247,8 @@ def core(index):
                     completed_tasks.append(task)
                 # print(f"\n [COMPLETED] Task {task.name} COMPLETED on core {index}")
                 
-                
             finish_barrier.wait()
             globals.global_finish_barrier.wait()
-            #! ============================================================= END ===================================================================
             
         except Exception as e:
             cores_finished += 1
