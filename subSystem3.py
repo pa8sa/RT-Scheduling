@@ -45,7 +45,7 @@ def borrow_resources(sys_to_borrow: int):
     }
         
     res_lock, res = index_to_map[sys_to_borrow]
-    print(f'BORROWED RES FROM {sys_to_borrow} MY RES = {globals.sub3_resources[0].count} {globals.sub3_resources[1].count} {res[0].count} {res[1].count}')
+    # print(f'BORROWED RES FROM {sys_to_borrow} MY RES = {globals.sub3_resources[0].count} {globals.sub3_resources[1].count} {res[0].count} {res[1].count}')
     
     res_lock.acquire()
     globals.sub3_resource_lock.acquire()
@@ -111,10 +111,6 @@ def handle_availability(tasks: List[Task]):
     global tasks_global, is_in_double_mode
     counts = [globals.sub3_resources[0].count, globals.sub3_resources[1].count]
     
-    print(f'is_schedulable {is_schedulable(tasks)}')
-    print(f'not_enough_resource {not_enough_resource(counts, tasks)}')
-    
-    
     if not is_schedulable(tasks) and not_enough_resource(counts, tasks):
         is_in_double_mode = True
         optimum_sys = optimum_sys_resources(tasks)
@@ -130,7 +126,6 @@ def handle_availability(tasks: List[Task]):
 def wait_for_print():
     while globals.print_turn != 3:
         pass
-    # print(f'==================================================== Time unit: {globals.time_unit}')
     print_output()
     
     globals.print_turn_lock.acquire()
