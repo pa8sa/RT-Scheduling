@@ -122,7 +122,7 @@ def core(index):
             pass
 
 def subSystem2(tasks: List[Task]):
-    global ready_queue, update_queue_var
+    global ready_queue, all_tasks
     
     all_tasks = tasks
 
