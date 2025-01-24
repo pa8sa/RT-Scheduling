@@ -145,9 +145,10 @@ def core(index, resources: List[Resource_]):
             elif index == 1:
                 glob_task2 = Task(name=f'failed to run {task.name}')
 
-            with R_lock:
-                R1.count += task.resource1_usage
-                R2.count += task.resource2_usage
+            R_lock.acquire()
+            R1.count += task.resource1_usage
+            R2.count += task.resource2_usage
+            R_lock.release()
             
             queue_lock.acquire()
             ready_queue.put(task)
@@ -164,10 +165,14 @@ def core(index, resources: List[Resource_]):
         elif index == 1:
             glob_task2 = task
         
-        with R_lock:
-            R1.count += task.resource1_usage
-            R2.count += task.resource2_usage
-        
+        finish_barrier.wait()
+        globals.global_finish_barrier.wait()
+
+        R_lock.acquire()
+        R1.count += task.resource1_usage
+        R2.count += task.resource2_usage
+        R_lock.release()
+
         if task.duration == 0:
             task.state = 'completed'
             queue_lock.acquire()
@@ -177,9 +182,6 @@ def core(index, resources: List[Resource_]):
             queue_lock.acquire()
             ready_queue.queue.appendleft(task)
             queue_lock.release()
-        
-        finish_barrier.wait()
-        globals.global_finish_barrier.wait()
 
 def subSystem4(resources: List[Resource_], tasks: List[Task]):
     global ready_queue, waiting_queue, all_tasks
