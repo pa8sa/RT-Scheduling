@@ -19,7 +19,6 @@ waiting_queue = Queue()
 completed_tasks = []
 
 queue_lock = threading.Lock()
-R_lock = threading.Lock()
 
 def wait_for_print():
     while globals.print_turn != 4:
@@ -116,13 +115,13 @@ def core(index, resources: List[Resource_]):
         
         # print(f"core {index} running task: {task.name}")
         
-        R_lock.acquire()
+        globals.sub4_resource_lock.acquire()
         if task.resource1_usage <= R1.count and task.resource2_usage <= R2.count:
             R1.count -= task.resource1_usage
             R2.count -= task.resource2_usage
         else:
             task.state = 'waiting'
-            print(f"task {task.name} is waiting R1: {R1.count} R2: {R2.count} +++++++++++++++++++++++++++++")
+            # print(f"task {task.name} is waiting R1: {R1.count} R2: {R2.count} +++++++++++++++++++++++++++++")
             waiting_queue.put(task)
 
             if index == 0:
@@ -130,12 +129,12 @@ def core(index, resources: List[Resource_]):
             elif index == 1:
                 glob_task2 = None
             
-            R_lock.release()
+            globals.sub4_resource_lock.release()
             finish_barrier.wait()
             globals.global_finish_barrier.wait()
             
             continue
-        R_lock.release()
+        globals.sub4_resource_lock.release()
 
         random_number = random.randint(1, 10)
         if random_number <= 3:
@@ -144,10 +143,10 @@ def core(index, resources: List[Resource_]):
             elif index == 1:
                 glob_task2 = Task(name=f'failed to run {task.name}')
 
-            R_lock.acquire()
+            globals.sub4_resource_lock.acquire()
             R1.count += task.resource1_usage
             R2.count += task.resource2_usage
-            R_lock.release()
+            globals.sub4_resource_lock.release()
             
             queue_lock.acquire()
             ready_queue.put(task)
@@ -167,10 +166,10 @@ def core(index, resources: List[Resource_]):
         finish_barrier.wait()
         globals.global_finish_barrier.wait()
 
-        R_lock.acquire()
+        globals.sub4_resource_lock.acquire()
         R1.count += task.resource1_usage
         R2.count += task.resource2_usage
-        R_lock.release()
+        globals.sub4_resource_lock.release()
 
         if task.duration == 0:
             task.state = 'completed'
