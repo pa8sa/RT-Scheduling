@@ -94,6 +94,55 @@ def mainThread():
         
   for t in sub_system_threads:
     t.join()
+    
+  globals.sub1_core1.start()
+  globals.sub1_core2.start()
+  globals.sub1_core3.start()
+  globals.sub2_core1.start()
+  globals.sub2_core2.start()
+  globals.sub3_core1.start()
+  globals.sub4_core1.start()
+  globals.sub4_core2.start()
+  
+  print(f'Core 1 of Subsystem 1:')
+  print(f'\tAvg Waiting Time: {globals.sub1_core1.avg_waiting_time}')
+  print(f'\tAvg Turnaround Time: {globals.sub1_core1.avg_turnaround_time}')
+  print(f'\tAvg Response Time: {globals.sub1_core1.avg_response_time}')
+  
+  print(f'Core 2 of Subsystem 1:')
+  print(f'\tAvg Waiting Time: {globals.sub1_core2.avg_waiting_time}')
+  print(f'\tAvg Turnaround Time: {globals.sub1_core2.avg_turnaround_time}')
+  print(f'\tAvg Response Time: {globals.sub1_core2.avg_response_time}')
+  
+  print(f'Core 3 of Subsystem 1:')
+  print(f'\tAvg Waiting Time: {globals.sub1_core3.avg_waiting_time}')
+  print(f'\tAvg Turnaround Time: {globals.sub1_core3.avg_turnaround_time}')
+  print(f'\tAvg Response Time: {globals.sub1_core3.avg_response_time}')
+  
+  print(f'Core 1 of Subsystem 2:')
+  print(f'\tAvg Waiting Time: {globals.sub2_core1.avg_waiting_time}')
+  print(f'\tAvg Turnaround Time: {globals.sub2_core1.avg_turnaround_time}')
+  print(f'\tAvg Response Time: {globals.sub2_core1.avg_response_time}')
+  
+  print(f'Core 2 of Subsystem 2:')
+  print(f'\tAvg Waiting Time: {globals.sub2_core2.avg_waiting_time}')
+  print(f'\tAvg Turnaround Time: {globals.sub2_core2.avg_turnaround_time}')
+  print(f'\tAvg Response Time: {globals.sub2_core2.avg_response_time}')
+  
+  print(f'Core 1 of Subsystem 3:')
+  print(f'\tAvg Waiting Time: {globals.sub3_core1.avg_waiting_time}')
+  print(f'\tAvg Turnaround Time: {globals.sub3_core1.avg_turnaround_time}')
+  print(f'\tAvg Response Time: {globals.sub3_core1.avg_response_time}')
+  
+  print(f'Core 1 of Subsystem 4:')
+  print(f'\tAvg Waiting Time: {globals.sub4_core1.avg_waiting_time}')
+  print(f'\tAvg Turnaround Time: {globals.sub4_core1.avg_turnaround_time}')
+  print(f'\tAvg Response Time: {globals.sub4_core1.avg_response_time}')
+  
+  print(f'Core 2 of Subsystem 4:')
+  print(f'\tAvg Waiting Time: {globals.sub4_core2.avg_waiting_time}')
+  print(f'\tAvg Turnaround Time: {globals.sub4_core2.avg_turnaround_time}')
+  print(f'\tAvg Response Time: {globals.sub4_core2.avg_response_time}')
 
 if __name__ == '__main__':
   t = threading.Thread(target=mainThread)

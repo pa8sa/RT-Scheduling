@@ -135,6 +135,9 @@ def wait_for_print():
 
 def print_output():
     global glob_task1, ready_queue, completed_tasks
+
+    globals.sub3_core1.append_task(glob_task1)
+
     print("Sub3:")
     print(f"\tR1: {globals.sub3_resources[0].count if globals.sub3_resources else '-'} R2: {globals.sub3_resources[1].count if globals.sub3_resources else '-'}")
     print(f"\tReady Queue: {[task.name for task in list(ready_queue)]}")

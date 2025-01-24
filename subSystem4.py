@@ -33,6 +33,10 @@ def wait_for_print():
 
 def print_output():
     global glob_R1, glob_R2, glob_task1, glob_task2
+
+    globals.sub4_core1.append_task(glob_task1)
+    globals.sub4_core2.append_task(glob_task2)
+
     print("Sub4:")
     print(f"\tR1: {glob_R1.count if glob_R1 else '-'} R2: {glob_R2.count if glob_R2 else '-'}")
     print(f"\tWaiting Queue: {[task.name for task in list(waiting_queue.queue)]}")

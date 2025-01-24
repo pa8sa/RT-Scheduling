@@ -1,4 +1,5 @@
 import threading
+from core import Core
 from resource_ import Resource_
 from typing import List
 
@@ -25,3 +26,12 @@ sub1_resources: List[Resource_] = []
 sub2_resources: List[Resource_] = []
 sub3_resources: List[Resource_] = []
 sub4_resources: List[Resource_] = []
+
+sub1_core1 = Core('sub1_core1')
+sub1_core2 = Core('sub1_core2')
+sub1_core3 = Core('sub1_core3')
+sub2_core1 = Core('sub2_core1')
+sub2_core2 = Core('sub2_core2')
+sub3_core1 = Core('sub3_core1')
+sub4_core1 = Core('sub4_core1')
+sub4_core2 = Core('sub4_core2')

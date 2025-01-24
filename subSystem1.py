@@ -72,6 +72,11 @@ def read_from_waiting_queue():
 
 def print_output():
     global glob_task1, glob_task2, glob_task3, ready_queue1, ready_queue2, ready_queue3, waiting_queue, completed_tasks, number_of_tasks
+
+    globals.sub1_core1.append_task(glob_task1)
+    globals.sub1_core2.append_task(glob_task2)
+    globals.sub1_core3.append_task(glob_task3)
+    
     print("------------------------------------------------- time unit:", globals.time_unit, "-------------------------------------------------")
     print("Sub1:")
     print(f"\tR1: {globals.sub1_resources[0].count if globals.sub1_resources[0] else '-'} R2: {globals.sub1_resources[1].count if globals.sub1_resources[1] else '-'}")
