@@ -25,24 +25,35 @@ python main.py
 main.py is the main system of the project that creates 4 threads for each subsystem .
 this file gets inputs from in.txt , creates threads for each subsystem , waits until subsystems finishes and print the waiting time , turnaround time and response time for each core of each subsystem
 
-### Sub System 1
+### Sub System 1  
+- **Cores**: 3 cores, each with a dedicated ready queue.
+- **Features**:  
+  - **Scheduling Algorithm**: Weighted Round Robin (WRR) with dynamic quantum based on task weights.
+  - **Load Balancing**: Push/pull migration between cores to balance queue lengths.
+  - **Starvation Avoidance**: Aging mechanism in the waiting queue (older tasks gain priority).
+  - **Resource Management**: Tasks temporarily release resources during execution pauses.
 
-this system has 1 waiting queue and 3 core that each of them has 1 ready queue .
+### Sub System 2  
+- **Cores**: 2 cores sharing a single ready queue.
+- **Features**:  
+  - **Scheduling Algorithm**: Shortest Remaining Time First (SRTF) for minimal latency.
+  - **Deadlock Avoidance**: Atomic resource allocation (tasks acquire all resources upfront).
+  - **Queue Sorting**: Ready queue dynamically sorted by task durations.
 
-this system has some features like load balancing including pull migration and push migration , starvation avoiding using aging in waiting queue , running tasks based on WRR algorithm and ...
+### Sub System 3  
+- **Cores**: 1 core with a priority-based ready queue.
+- **Features**:  
+  - **Scheduling Algorithm**: Rate Monotonic Scheduling (RMS) for periodic tasks.
+  - **Resource Borrowing**: Borrows resources from other subsystems if local resources are insufficient.
+  - **Periodic Tasks**: Supports recursion and re-entrant tasks with defined periods (e.g., sensor polling).
+  - **Preemption**: Higher-priority tasks preempt lower-priority ones.
 
-### Sub System 2
+### Sub System 4  
+- **Cores**: 2 cores sharing a ready queue and a waiting queue.
+- **Features**:  
+  - **Scheduling Algorithm**: First-Come-First-Served (FCFS) with aging in the waiting queue.
+  - **Fault Handling**: 30% probability of task failure, with retry logic.
+  - **Prerequisites**: Tasks can specify dependencies (e.g., "TaskB must run after TaskA").
+  - **Deterministic Sorting**: Ready queue sorted by entering time and duration.
 
-this system has 1 ready queue and 2 core that use this ready queue shared .
-
-this system has some features like running tasks based on SRTF algorithm , hold and wait for resources , deadlock avoidance and ...
-
-### Sub System 3
-
-
-
-### Sub System 4
-
-this system has 1 waiting queue and 2 cores that using 1 ready queue shared .
-
-this system has some features like running tasks based on FCFS algorithm , starvation avoiding using aging in waiting queue , handles failing tasks with 30% probability , handles that prerequisite for a task has to be executed before it and ...
+---
