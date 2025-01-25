@@ -5,7 +5,7 @@ from typing import List
 
 time_unit = -1
 
-breaking_point = 2
+breaking_point = 40
 
 def increment_time_unit():
   global time_unit
