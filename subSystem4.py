@@ -54,8 +54,19 @@ def print_output():
 def update_queue():
     global ready_queue, waiting_queue
     if not waiting_queue.empty():
+        tasks = list(waiting_queue.queue)
+        for task in tasks:
+            if not task.age:
+                task.age = 0
+            else:
+                task.age += 1
+        waiting_queue = Queue()
+        for task in sorted(tasks, key=lambda task: task.age):
+            waiting_queue.put(task)
+        
         task = waiting_queue.get()
         task.state = 'ready'
+        task.age = 0
         ready_queue.put(task)
     for i in range(len(all_tasks)):
         if all_tasks[i].entering_time == globals.time_unit + 1:

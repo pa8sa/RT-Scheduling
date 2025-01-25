@@ -20,3 +20,5 @@ class Task:
     self.recursion = recursion
     
     self.prerequisite_task_name = prerequisite_task_name
+    
+    self.age = 0
