@@ -1,1 +1,1819 @@
 nemoone khorooji :
+------------------------------------------------- time unit: 0 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: ['T11']
+	Core1:
+		Running Task: T11
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		[]
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T21
+		Duration Remaining: 3
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 4 R2: 5
+	Ready Queue: ['T32']
+	Core1:
+		Running Task: T31
+Sub4:
+	R1: 0 R2: 0
+	Waiting Queue: ['T44']
+	Ready Queue: ['T46']
+	Each Durations: [4]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 1 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: T11
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: ['T22']
+	Each Durations: [5]
+	Core1:
+		Running Task: T24
+		Duration Remaining: 0
+	Core2:
+		Running Task: T21
+		Duration Remaining: 2
+Sub3:
+	R1: 4 R2: 5
+	Ready Queue: []
+	Core1:
+		Running Task: T32
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: ['T44']
+	Ready Queue: ['T46']
+	Each Durations: [4]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 2 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: ['T22']
+	Each Durations: [5]
+	Core1:
+		Running Task: T21
+		Duration Remaining: 1
+	Core2:
+		Running Task: T23
+		Duration Remaining: 1
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46']
+	Each Durations: [4]
+	Core1:
+		Running Task: T44
+		Duration Remaining: 3
+	Core2:
+		Running Task: failed to run T44
+		Duration Remaining: None
+------------------------------------------------- time unit: 3 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: ['T22', 'T25']
+	Each Durations: [5, 6]
+	Core1:
+		Running Task: T23
+		Duration Remaining: 0
+	Core2:
+		Running Task: T21
+		Duration Remaining: 0
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46']
+	Each Durations: [4]
+	Core1:
+		Running Task: T44
+		Duration Remaining: 2
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 4 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T25
+		Duration Remaining: 5
+	Core2:
+		Running Task: T22
+		Duration Remaining: 4
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46']
+	Each Durations: [4]
+	Core1:
+		Running Task: T44
+		Duration Remaining: 1
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 5 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T25
+		Duration Remaining: 4
+	Core2:
+		Running Task: T22
+		Duration Remaining: 3
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41']
+	Each Durations: [4, 2]
+	Core1:
+		Running Task: T44
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 6 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T25
+		Duration Remaining: 3
+	Core2:
+		Running Task: T22
+		Duration Remaining: 2
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41']
+	Each Durations: [4, 2]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 7 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T22
+		Duration Remaining: 1
+	Core2:
+		Running Task: T25
+		Duration Remaining: 2
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T42']
+	Each Durations: [4, 2, 4]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 8 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T22
+		Duration Remaining: 0
+	Core2:
+		Running Task: T25
+		Duration Remaining: 1
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T42']
+	Each Durations: [4, 2, 4]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 9 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T25
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T42']
+	Each Durations: [4, 2, 4]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T43
+		Duration Remaining: 6
+------------------------------------------------- time unit: 10 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T42']
+	Each Durations: [4, 2, 4]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T43
+		Duration Remaining: 5
+------------------------------------------------- time unit: 11 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T26
+		Duration Remaining: 7
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T42', 'T45', 'T43']
+	Each Durations: [4, 2, 4, 2, 5]
+	Core1:
+		Running Task: failed to run T43
+		Duration Remaining: None
+	Core2:
+		Running Task: failed to run T43
+		Duration Remaining: None
+------------------------------------------------- time unit: 12 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T27
+		Duration Remaining: 2
+	Core2:
+		Running Task: T26
+		Duration Remaining: 6
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T45', 'T46', 'T41', 'T42']
+	Each Durations: [2, 4, 2, 4]
+	Core1:
+		Running Task: T43
+		Duration Remaining: 4
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 13 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: ['T26']
+	Each Durations: [6]
+	Core1:
+		Running Task: T28
+		Duration Remaining: 0
+	Core2:
+		Running Task: T27
+		Duration Remaining: 1
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T42', 'T45']
+	Each Durations: [4, 2, 4, 2]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T43
+		Duration Remaining: 3
+------------------------------------------------- time unit: 14 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T27
+		Duration Remaining: 0
+	Core2:
+		Running Task: T26
+		Duration Remaining: 5
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T42', 'T45']
+	Each Durations: [4, 2, 4, 2]
+	Core1:
+		Running Task: T43
+		Duration Remaining: 2
+	Core2:
+		Running Task: failed to run T43
+		Duration Remaining: None
+------------------------------------------------- time unit: 15 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T26
+		Duration Remaining: 4
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T46', 'T41', 'T42', 'T45']
+	Each Durations: [4, 2, 4, 2]
+	Core1:
+		Running Task: T43
+		Duration Remaining: 1
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 16 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T26
+		Duration Remaining: 3
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T47', 'T46', 'T41', 'T42', 'T45']
+	Each Durations: [1, 4, 2, 4, 2]
+	Core1:
+		Running Task: T43
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 17 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T26
+		Duration Remaining: 2
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T42', 'T45', 'T48']
+	Each Durations: [4, 2, 4, 2, 4]
+	Core1:
+		Running Task: failed to run T48
+		Duration Remaining: None
+	Core2:
+		Running Task: T47
+		Duration Remaining: 0
+------------------------------------------------- time unit: 18 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T26
+		Duration Remaining: 1
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T46', 'T41', 'T45']
+	Each Durations: [4, 2, 2]
+	Core1:
+		Running Task: T42
+		Duration Remaining: 3
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 19 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T26
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T46', 'T41', 'T45']
+	Each Durations: [4, 2, 2]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T42
+		Duration Remaining: 2
+------------------------------------------------- time unit: 20 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T29
+		Duration Remaining: 4
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: ['T42', 'T46', 'T41', 'T45', 'T48']
+	Each Durations: [2, 4, 2, 2, 4]
+	Core1:
+		Running Task: failed to run T42
+		Duration Remaining: None
+	Core2:
+		Running Task: failed to run T48
+		Duration Remaining: None
+------------------------------------------------- time unit: 21 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T29
+		Duration Remaining: 3
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T46', 'T41', 'T45']
+	Each Durations: [4, 2, 2]
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T42
+		Duration Remaining: 1
+------------------------------------------------- time unit: 22 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T29
+		Duration Remaining: 2
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T46', 'T41', 'T45']
+	Each Durations: [4, 2, 2]
+	Core1:
+		Running Task: T42
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 23 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T29
+		Duration Remaining: 1
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T46', 'T41', 'T45']
+	Each Durations: [4, 2, 2]
+	Core1:
+		Running Task: failed to run T41
+		Duration Remaining: None
+	Core2:
+		Running Task: T48
+		Duration Remaining: 3
+------------------------------------------------- time unit: 24 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T29
+		Duration Remaining: 0
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: ['T45', 'T48', 'T46']
+	Each Durations: [2, 3, 4]
+	Core1:
+		Running Task: T41
+		Duration Remaining: 1
+	Core2:
+		Running Task: failed to run T48
+		Duration Remaining: None
+------------------------------------------------- time unit: 25 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T46', 'T45']
+	Each Durations: [4, 2]
+	Core1:
+		Running Task: T41
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 26 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T46']
+	Each Durations: [4]
+	Core1:
+		Running Task: T45
+		Duration Remaining: 1
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 27 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: ['T46']
+	Each Durations: [4]
+	Core1:
+		Running Task: T45
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 28 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T46
+		Duration Remaining: 3
+------------------------------------------------- time unit: 29 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T46
+		Duration Remaining: 2
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 30 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T46
+		Duration Remaining: 1
+------------------------------------------------- time unit: 31 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: ['T48']
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T46
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 32 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: T48
+		Duration Remaining: 2
+------------------------------------------------- time unit: 33 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: failed to run T48
+		Duration Remaining: None
+	Core2:
+		Running Task: T48
+		Duration Remaining: 1
+------------------------------------------------- time unit: 34 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 1 R2: 2
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: T48
+		Duration Remaining: 0
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 35 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 36 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 37 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 38 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 39 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+------------------------------------------------- time unit: 40 -------------------------------------------------
+Sub1:
+	R1: 2 R2: 2
+	Waiting Queue: []
+	Core1:
+		Running Task: idle
+		Ready Queue: []
+	Core2:
+		Running Task: idle
+		Ready Queue: []
+	Core3:
+		Running Task: idle
+		Ready Queue: []
+	Completed Tasks: 
+		['T11']
+Sub2:
+	R1: 2 R2: 3
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+Sub3:
+	R1: 1 R2: 1
+	Ready Queue: []
+	Core1:
+		Running Task: idle
+Sub4:
+	R1: 3 R2: 4
+	Waiting Queue: []
+	Ready Queue: []
+	Each Durations: []
+	Core1:
+		Running Task: idle
+		Duration Remaining: -
+	Core2:
+		Running Task: idle
+		Duration Remaining: -
+
+
+
+
+Core sub1_core1 started:
+--------------------------------------------------
+T11-T11-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-
+--------------------------------------------------
+
+Core sub1_core2 started:
+--------------------------------------------------
+Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-
+--------------------------------------------------
+
+Core sub1_core3 started:
+--------------------------------------------------
+Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-
+--------------------------------------------------
+
+Core sub2_core1 started:
+--------------------------------------------------
+T21-T24-T21-T23-T25-T25-T25-T22-T22-T25-Idle-T26-T27-T28-T27-T26-T26-T26-T26-T26-T29-Idle-T29-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-
+--------------------------------------------------
+
+Core sub2_core2 started:
+--------------------------------------------------
+Idle-T21-T23-T21-T22-T22-T22-T25-T25-Idle-Idle-Idle-T26-T27-T26-Idle-Idle-Idle-Idle-Idle-Idle-T29-Idle-T29-T29-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-
+--------------------------------------------------
+
+Core sub3_core1 started:
+--------------------------------------------------
+T31-T32-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-
+--------------------------------------------------
+
+Core sub4_core1 started:
+--------------------------------------------------
+Idle-Idle-T44-T44-T44-T44-Idle-Idle-Idle-Idle-Idle-Idle-T43-Idle-T43-T43-T43-Idle-T42-Idle-Idle-Idle-T42-Idle-T41-T41-T45-T45-Idle-T46-Idle-T46-Idle-Idle-T48-Idle-Idle-Idle-Idle-Idle-Idle-
+--------------------------------------------------
+
+Core sub4_core2 started:
+--------------------------------------------------
+Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-Idle-T43-T43-Idle-Idle-T43-Idle-Idle-Idle-T47-Idle-T42-Idle-T42-Idle-T48-Idle-Idle-Idle-Idle-T46-Idle-T46-Idle-T48-T48-Idle-Idle-Idle-Idle-Idle-Idle-Idle-
+--------------------------------------------------
+
+Core 1 of Subsystem 1:
+	Avg Waiting Time: 0.0
+	Avg Turnaround Time: 2.0
+	Avg Response Time: 0.0
+
+Core 2 of Subsystem 1:
+	Avg Waiting Time: 0
+	Avg Turnaround Time: 0
+	Avg Response Time: 0
+
+Core 3 of Subsystem 1:
+	Avg Waiting Time: 0
+	Avg Turnaround Time: 0
+	Avg Response Time: 0
+
+Core 1 of Subsystem 2:
+	Avg Waiting Time: 1.7777777777777777
+	Avg Turnaround Time: 4.111111111111111
+	Avg Response Time: 0.8888888888888888
+
+Core 2 of Subsystem 2:
+	Avg Waiting Time: 2.0
+	Avg Turnaround Time: 4.0
+	Avg Response Time: 1.5714285714285714
+
+Core 1 of Subsystem 3:
+	Avg Waiting Time: 0.5
+	Avg Turnaround Time: 1.5
+	Avg Response Time: 0.5
+
+Core 1 of Subsystem 4:
+	Avg Waiting Time: 14.714285714285714
+	Avg Turnaround Time: 17.142857142857142
+	Avg Response Time: 14.0
+
+Core 2 of Subsystem 4:
+	Avg Waiting Time: 12.2
+	Avg Turnaround Time: 14.4
+	Avg Response Time: 9.8
+
+
+
+T11 completed in time_unit 1 : sub1_core1|sub1_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T21 completed in time_unit 3 : sub2_core1|sub2_core2|sub2_core1|sub2_core2|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T22 completed in time_unit 8 : Idle|Idle|Idle|Idle|sub2_core2|sub2_core2|sub2_core2|sub2_core1|sub2_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T23 completed in time_unit 3 : Idle|Idle|sub2_core2|sub2_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T24 completed in time_unit 1 : Idle|sub2_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T25 completed in time_unit 9 : Idle|Idle|Idle|Idle|sub2_core1|sub2_core1|sub2_core1|sub2_core2|sub2_core2|sub2_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T26 completed in time_unit 19 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub2_core1|sub2_core2|Idle|sub2_core2|sub2_core1|sub2_core1|sub2_core1|sub2_core1|sub2_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T27 completed in time_unit 14 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub2_core1|sub2_core2|sub2_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T28 completed in time_unit 13 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub2_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T29 completed in time_unit 24 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub2_core1|sub2_core2|sub2_core1|sub2_core2|sub2_core2|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T31 completed in time_unit 0 : sub3_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T32 completed in time_unit 1 : Idle|sub3_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T41 completed in time_unit 25 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub4_core1|sub4_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T42 completed in time_unit 22 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub4_core1|sub4_core2|Idle|sub4_core2|sub4_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T43 completed in time_unit 16 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub4_core2|sub4_core2|Idle|sub4_core1|sub4_core2|sub4_core1|sub4_core1|sub4_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T44 completed in time_unit 5 : Idle|Idle|sub4_core1|sub4_core1|sub4_core1|sub4_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T45 completed in time_unit 27 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub4_core1|sub4_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T46 completed in time_unit 31 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub4_core2|sub4_core1|sub4_core2|sub4_core1|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T47 completed in time_unit 17 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub4_core2|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|
+
+T48 completed in time_unit 34 : Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub4_core2|Idle|Idle|Idle|Idle|Idle|Idle|Idle|Idle|sub4_core2|sub4_core2|sub4_core1|Idle|Idle|Idle|Idle|Idle|
+
+
+
+task T11 in subsystem 1 total waiting time: 0
+task T41 in subsystem 4 total waiting time: 0
+task T42 in subsystem 4 total waiting time: 0
+task T43 in subsystem 4 total waiting time: 0
+task T44 in subsystem 4 total waiting time: 2
+task T45 in subsystem 4 total waiting time: 0
+task T46 in subsystem 4 total waiting time: 0
+task T47 in subsystem 4 total waiting time: 0
+task T48 in subsystem 4 total waiting time: 13
