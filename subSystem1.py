@@ -70,6 +70,13 @@ def read_from_waiting_queue():
         else:
             add_to_waiting_queue(task)
 
+def increment_waiting_time():
+    global waiting_queue
+    tasks = waiting_queue.queue
+    
+    for task in tasks:
+        task.waiting_time += 1
+
 def print_output():
     global glob_task1, glob_task2, glob_task3, ready_queue1, ready_queue2, ready_queue3, waiting_queue, completed_tasks, number_of_tasks
 
@@ -113,6 +120,8 @@ def print_output():
         "completed_tasks": [task.name if task.state=='completed' else '' for task in list(completed_tasks)]
     }
     globals.current_time_data["sub1"] = sub1_state
+    
+    increment_waiting_time()
 
 finish_barrier = threading.Barrier(3, action=wait_for_print)
 
