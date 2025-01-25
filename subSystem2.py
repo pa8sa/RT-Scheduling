@@ -111,11 +111,22 @@ def core(index):
                 R1.count -= task.resource1_usage
                 R2.count -= task.resource2_usage
             else:
+                step = 0
                 while True:
+                    if step == 10000:
+                        print(f'\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Task {task.name} on core {index} in SubSystem 2 creates deadlock !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                        ready_queue.put(task)
+                        break
                     if task.resource1_usage <= R1.count and task.resource2_usage <= R2.count:
                         R1.count -= task.resource1_usage
                         R2.count -= task.resource2_usage
                         break
+                    step += 1
+                if step == 10000:
+                    globals.sub2_resource_lock.release()
+                    finish_barrier.wait()
+                    globals.global_finish_barrier.wait()
+                    continue
             globals.sub2_resource_lock.release()
 
             task.duration -= 1
