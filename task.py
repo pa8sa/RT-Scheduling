@@ -22,3 +22,4 @@ class Task:
     self.prerequisite_task_name = prerequisite_task_name
     
     self.age = 0
+    self.waiting_time = 0

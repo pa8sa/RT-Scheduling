@@ -1,3 +1,5 @@
+from typing import List
+import globals
 from task import Task
 
 class Core:
@@ -97,3 +99,32 @@ class Core:
         self.total_response_time += i - current_task.entering_time
         
     self.avg_response_time = self.total_response_time / len(seen_tasks)
+
+  @staticmethod
+  def info_of_each_task(subsystem_number , cores: List['Core'], num_of_tasks: int):
+    each_task_info = []
+    each_task_last_run = []
+    
+    for i in range(num_of_tasks):
+      task_info = []
+      task_name = f"T{subsystem_number}{i + 1}"
+      each_task_last_run.append(-1)
+      
+      for j in range(globals.breaking_point):
+        done = 0
+        for core in cores:
+          if core.schedule[j] and core.schedule[j].name == task_name:
+            task_info.append(core.name)
+            each_task_last_run[i] = j
+            done = 1
+            break
+        if done == 0:
+          task_info.append("Idle")
+          
+      each_task_info.append(task_info)
+      
+    for i in range(len(each_task_info)):
+      print(f"T{subsystem_number}{i + 1} completed in time_unit {each_task_last_run[i]} ", end=": ")
+      for j in range(len(each_task_info[i])):
+        print(each_task_info[i][j], end="|")
+      print('\n')
