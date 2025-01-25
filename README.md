@@ -1,8 +1,11 @@
 # RT-Scheduling
+![alt text](images/image.png)
 
 ## Overview
 
 RT-Scheduling is a real-time task scheduling simulation project. The project simulates the scheduling of tasks across multiple subsystems, each with its own set of resources and cores. The tasks have various attributes such as duration, resource usage, entering time, and other parameters specific to each subsystem.
+
+![alt text](images/image1.png)
 
 ## Project Structure
 

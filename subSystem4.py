@@ -125,11 +125,8 @@ def core(index, resources: List[Resource_]):
         
         globals.global_start_barrier.wait()
         
-        R1 = resources[0]
-        R2 = resources[1]
-
-        glob_R1 = R1
-        glob_R2 = R2
+        glob_R1 = globals.sub4_resources[0]
+        glob_R2 = globals.sub4_resources[1]
         
         queue_lock.acquire()
         if not ready_queue.empty():
@@ -167,9 +164,9 @@ def core(index, resources: List[Resource_]):
         # print(f"core {index} running task: {task.name}")
         
         globals.sub4_resource_lock.acquire()
-        if task.resource1_usage <= R1.count and task.resource2_usage <= R2.count:
-            R1.count -= task.resource1_usage
-            R2.count -= task.resource2_usage
+        if task.resource1_usage <= globals.sub4_resources[0].count and task.resource2_usage <= globals.sub4_resources[1].count:
+            globals.sub4_resources[0].count -= task.resource1_usage
+            globals.sub4_resources[1].count -= task.resource2_usage
         else:
             task.state = 'waiting'
             # print(f"task {task.name} is waiting R1: {R1.count} R2: {R2.count} +++++++++++++++++++++++++++++")
@@ -195,8 +192,8 @@ def core(index, resources: List[Resource_]):
                 glob_task2 = Task(name=f'failed to run {task.name}')
 
             globals.sub4_resource_lock.acquire()
-            R1.count += task.resource1_usage
-            R2.count += task.resource2_usage
+            globals.sub4_resources[0].count += task.resource1_usage
+            globals.sub4_resources[1].count += task.resource2_usage
             globals.sub4_resource_lock.release()
             
             queue_lock.acquire()
@@ -218,8 +215,8 @@ def core(index, resources: List[Resource_]):
         globals.global_finish_barrier.wait()
 
         globals.sub4_resource_lock.acquire()
-        R1.count += task.resource1_usage
-        R2.count += task.resource2_usage
+        globals.sub4_resources[0].count += task.resource1_usage
+        globals.sub4_resources[1].count += task.resource2_usage
         globals.sub4_resource_lock.release()
 
         if task.duration == 0:

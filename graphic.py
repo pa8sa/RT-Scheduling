@@ -170,21 +170,22 @@ def show_gui():
             canvas.create_line(x, 0, x, 60, fill='black')
             
             if index == 0:
-                text = f'{globals.sub1_core1.schedule[i].name if globals.sub1_core1.schedule[i] else 'idle'}'
+                text = f"{globals.sub1_core1.schedule[i].name if globals.sub1_core1.schedule[i] else 'idle'}"
             elif index == 1:
-                text = f'{globals.sub1_core2.schedule[i].name if globals.sub1_core2.schedule[i] else 'idle'}'
+                text = f"{globals.sub1_core2.schedule[i].name if globals.sub1_core2.schedule[i] else 'idle'}"
             elif index == 2:
-                text = f'{globals.sub1_core3.schedule[i].name if globals.sub1_core3.schedule[i] else 'idle'}'
+                text = f"{globals.sub1_core3.schedule[i].name if globals.sub1_core3.schedule[i] else 'idle'}"
             elif index == 3:
-                text = f'{globals.sub2_core1.schedule[i].name if globals.sub2_core1.schedule[i] else 'idle'}'
+                text = f"{globals.sub2_core1.schedule[i].name if globals.sub2_core1.schedule[i] else 'idle'}"
             elif index == 4:
-                text = f'{globals.sub2_core2.schedule[i].name if globals.sub2_core2.schedule[i] else 'idle'}'
+                text = f"{globals.sub2_core2.schedule[i].name if globals.sub2_core2.schedule[i] else 'idle'}"
             elif index == 5:
-                text = f'{globals.sub3_core1.schedule[i].name if globals.sub3_core1.schedule[i] else 'idle'}'
+                text = f"{globals.sub3_core1.schedule[i].name if globals.sub3_core1.schedule[i] else 'idle'}"
             elif index == 6:
-                text = f'{globals.sub4_core1.schedule[i].name if globals.sub4_core1.schedule[i] else 'idle'}'
+                text = f"{globals.sub4_core1.schedule[i].name if globals.sub4_core1.schedule[i] else 'idle'}"
             elif index == 7:
-                text = f'{globals.sub4_core2.schedule[i].name if globals.sub4_core2.schedule[i] else 'idle'}'
+                text = f"{globals.sub4_core2.schedule[i].name if globals.sub4_core2.schedule[i] else 'idle'}"
+
             canvas.create_text(x + rect_width / 2, 30, text=text, font=('Helvetica', 8))
             
             canvas.create_text(x + rect_width / 2, 70, text=f'{i}-{i+1}', font=('Helvetica', 8))
