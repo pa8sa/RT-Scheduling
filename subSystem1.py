@@ -101,10 +101,7 @@ def print_output():
     print(f"\t\tRunning Task: {glob_task3.name if glob_task3 and glob_task3.state=='running' else 'idle'}")
     print(f"\t\tReady Queue: {[task.name if task.state=='ready' else '' for task in list(ready_queue3.queue)]}")
     print(f"\tCompleted Tasks: \n\t\t{[task.name if task.state=='completed' else '' for task in list(completed_tasks)]}")
-    
-    
-    read_from_waiting_queue()
-    
+        
     sub1_state = {
         "R1": globals.sub1_resources[0].count,
         "R2": globals.sub1_resources[1].count,
@@ -121,6 +118,7 @@ def print_output():
     }
     globals.current_time_data["sub1"] = sub1_state
     
+    read_from_waiting_queue()
     increment_waiting_time()
 
 finish_barrier = threading.Barrier(3, action=wait_for_print)

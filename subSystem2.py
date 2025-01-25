@@ -14,6 +14,8 @@ ready_queue = Queue()
 
 queue_lock = threading.Lock()
 
+completed_tasks = []
+
 def wait_for_print():
     while globals.print_turn != 2:
         pass
@@ -26,7 +28,7 @@ def wait_for_print():
     globals.print_turn_lock.release()
 
 def print_output():
-    global glob_task1, glob_task2, ready_queue
+    global glob_task1, glob_task2, ready_queue, completed_tasks
 
     globals.sub2_core1.append_task(glob_task1)
     globals.sub2_core2.append_task(glob_task2)
@@ -41,22 +43,24 @@ def print_output():
     print(f"\tCore2:")
     print(f"\t\tRunning Task: {glob_task2.name if glob_task2 else 'idle'}")
     print(f"\t\tDuration Remaining: {glob_task2.duration if glob_task2 else '-'}")
-
-    update_queue()
     
     sub2_state = {
-        "R1": globals.sub1_resources[0].count,
-        "R2": globals.sub1_resources[1].count,
-        "ready_queue": [task.name for task in list(ready_queue.queue)],
+        "R1": globals.sub2_resources[0].count,
+        "R2": globals.sub2_resources[1].count,
         "duration": [task.duration for task in list(ready_queue.queue)],
         "cores": [ 
             {"running_task": glob_task1.name if glob_task1 else "idle",
-                "duration": glob_task1.duration if glob_task1 else "-"},
+                "duration": glob_task1.duration if glob_task1 else "-",
+                "ready_queue": [task.name for task in list(ready_queue.queue)]},
             {"running_task": glob_task2.name if glob_task2 else "idle",
-                "duration": glob_task2.duration if glob_task2 else "-"},
-        ]
+                "duration": glob_task2.duration if glob_task2 else "-",
+                "ready_queue": [task.name for task in list(ready_queue.queue)]},
+        ],
+        "completed_tasks": [task.name for task in completed_tasks]
     }
     globals.current_time_data["sub2"] = sub2_state
+
+    update_queue()
     
 def update_queue():
     global all_tasks, ready_queue
@@ -75,7 +79,7 @@ def update_queue():
 finish_barrier = threading.Barrier(2, action=wait_for_print)
 
 def core(index):
-    global ready_queue, glob_task1, glob_task2
+    global ready_queue, glob_task1, glob_task2, completed_tasks
 
     while True:
         if globals.time_unit == globals.breaking_point:
@@ -129,6 +133,7 @@ def core(index):
 
             if task.duration == 0:
                 task.state = 'completed'
+                completed_tasks.append(task)
                 # print(f"\n[COMPLETED] Task {task.name} on core {index}")
                 # print(f"\nTask {task.name} COMPLETED on core {index}")
             

@@ -51,7 +51,7 @@ def increment_waiting_time():
         task.waiting_time += 1
 
 def print_output():
-    global glob_R1, glob_R2, glob_task1, glob_task2
+    global glob_R1, glob_R2, glob_task1, glob_task2, completed_tasks
 
     globals.sub4_core1.append_task(glob_task1)
     globals.sub4_core2.append_task(glob_task2)
@@ -68,22 +68,24 @@ def print_output():
     print(f"\t\tRunning Task: {glob_task2.name if glob_task2 else 'idle'}")
     print(f"\t\tDuration Remaining: {glob_task2.duration if glob_task2 else '-'}")
     
-    increment_waiting_time()
-    update_queue()
-    
     sub4_state = {
-        "R1": globals.sub1_resources[0].count,
-        "R2": globals.sub1_resources[1].count,
+        "R1": globals.sub4_resources[0].count,
+        "R2": globals.sub4_resources[1].count,
         "waiting_queue": [task.name for task in list(waiting_queue.queue)],
-        "ready_queue": [task.name for task in list(ready_queue.queue)],
         "cores": [
             {"running_task": glob_task1.name if glob_task1 else "idle",
-             "duration": [task.duration for task in list(ready_queue.queue)]},
+             "duration": [task.duration for task in list(ready_queue.queue)],
+            "ready_queue": [task.name for task in list(ready_queue.queue)]},
             {"running_task": glob_task2.name if glob_task2 else "idle",
-             "duration": [task.duration for task in list(ready_queue.queue)]},
+             "duration": [task.duration for task in list(ready_queue.queue)],
+            "ready_queue": [task.name for task in list(ready_queue.queue)]},
         ],
+        "completed_tasks": [task.name for task in completed_tasks]
     }
     globals.current_time_data["sub4"] = sub4_state
+
+    increment_waiting_time()
+    update_queue()
 
 def update_queue():
     global ready_queue, waiting_queue
