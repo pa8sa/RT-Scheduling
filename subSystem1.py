@@ -97,6 +97,22 @@ def print_output():
     
     
     read_from_waiting_queue()
+    
+    sub1_state = {
+        "R1": globals.sub1_resources[0].count,
+        "R2": globals.sub1_resources[1].count,
+        "waiting_queue": [task.name if task.entering_time<= globals.time_unit and task.state == 'waiting' else '' for task in list(waiting_queue.queue)],
+        "cores": [
+            {"running_task": glob_task1.name  if glob_task1 and glob_task1.state=='running' else 'idle',
+             "ready_queue": [task.name if task.state=='ready' else '' for task in list(ready_queue1.queue)]},
+            {"running_task": glob_task2.name  if glob_task2 and glob_task2.state=='running' else 'idle',
+             "ready_queue": [task.name if task.state=='ready' else '' for task in list(ready_queue2.queue)]},
+            {"running_task": glob_task3.name  if glob_task3 and glob_task3.state=='running' else 'idle',
+             "ready_queue": [task.name if task.state=='ready' else '' for task in list(ready_queue3.queue)]},
+        ],
+        "completed_tasks": [task.name if task.state=='completed' else '' for task in list(completed_tasks)]
+    }
+    globals.current_time_data["sub1"] = sub1_state
 
 finish_barrier = threading.Barrier(3, action=wait_for_print)
 

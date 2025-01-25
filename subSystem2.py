@@ -44,6 +44,20 @@ def print_output():
 
     update_queue()
     
+    sub2_state = {
+        "R1": globals.sub1_resources[0].count,
+        "R2": globals.sub1_resources[1].count,
+        "ready_queue": [task.name for task in list(ready_queue.queue)],
+        "duration": [task.duration for task in list(ready_queue.queue)],
+        "cores": [ 
+            {"running_task": glob_task1.name if glob_task1 else "idle",
+                "duration": glob_task1.duration if glob_task1 else "-"},
+            {"running_task": glob_task2.name if glob_task2 else "idle",
+                "duration": glob_task2.duration if glob_task2 else "-"},
+        ]
+    }
+    globals.current_time_data["sub2"] = sub2_state
+    
 def update_queue():
     global all_tasks, ready_queue
     

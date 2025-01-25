@@ -29,6 +29,18 @@ def wait_for_print():
     globals.print_turn_lock.acquire()
     globals.print_turn %= 4
     globals.print_turn += 1
+    
+    globals.time_units_data.append({
+        "time": globals.time_unit,
+        "subsystems": [
+            globals.current_time_data.get("sub1", {}),
+            globals.current_time_data.get("sub2", {}),
+            globals.current_time_data.get("sub3", {}),
+            globals.current_time_data.get("sub4", {})
+        ]
+    })
+    globals.current_time_data.clear()
+    
     globals.print_turn_lock.release()
 
 def print_output():
@@ -51,6 +63,20 @@ def print_output():
     
     update_queue()
     
+    sub4_state = {
+        "R1": globals.sub1_resources[0].count,
+        "R2": globals.sub1_resources[1].count,
+        "waiting_queue": [task.name for task in list(waiting_queue.queue)],
+        "ready_queue": [task.name for task in list(ready_queue.queue)],
+        "cores": [
+            {"running_task": glob_task1.name if glob_task1 else "idle",
+             "duration": [task.duration for task in list(ready_queue.queue)]},
+            {"running_task": glob_task2.name if glob_task2 else "idle",
+             "duration": [task.duration for task in list(ready_queue.queue)]},
+        ],
+    }
+    globals.current_time_data["sub4"] = sub4_state
+
 def update_queue():
     global ready_queue, waiting_queue
     if not waiting_queue.empty():

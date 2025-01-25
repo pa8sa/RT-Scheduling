@@ -146,6 +146,17 @@ def print_output():
     # print(f"\tCompleted Tasks: \n\t\t{[task.name if task.state=='completed' else '' for task in list(completed_tasks)]}")
     
     give_back_resource()
+    
+    sub3_state = {
+        "R1": globals.sub1_resources[0].count,
+        "R2": globals.sub1_resources[1].count,
+        "ready_queue": [t.name for t in list(ready_queue)],
+        "cores": [
+            {"running_task": glob_task1.name if glob_task1 else "idle"},
+        ],
+        "completed_tasks": [task.name if task.state=='completed' else '' for task in list(completed_tasks)]
+    }
+    globals.current_time_data["sub3"] = sub3_state
 
 finish_barrier = threading.Barrier(1, action=wait_for_print)
 

@@ -5,6 +5,7 @@ from subSystem1 import subSystem1
 from subSystem2 import subSystem2
 from subSystem3 import subSystem3
 from subSystem4 import subSystem4
+from graphic import show_gui
 import globals
 
 iToSubMap = {
@@ -143,8 +144,11 @@ def mainThread():
   print(f'\tAvg Waiting Time: {globals.sub4_core2.avg_waiting_time}')
   print(f'\tAvg Turnaround Time: {globals.sub4_core2.avg_turnaround_time}')
   print(f'\tAvg Response Time: {globals.sub4_core2.avg_response_time}')
-
+  
 if __name__ == '__main__':
   t = threading.Thread(target=mainThread)
+  
   t.start()
+  
   t.join()
+  show_gui()
