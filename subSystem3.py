@@ -70,7 +70,7 @@ def not_enough_resource(counts, tasks: List[Task]):
 def give_back_resource():
     global best_sys_to_borrow, borrowed_count, tasks_global, is_in_double_mode
     
-    if best_sys_to_borrow == -1:
+    if best_sys_to_borrow and best_sys_to_borrow == -1:
         return
     
     counts = [globals.sub3_resources[0].count - borrowed_count[0], globals.sub3_resources[1].count - borrowed_count[1]]
@@ -271,7 +271,8 @@ def core():
         globals.global_finish_barrier.wait()
 
 def subSystem3(tasks: List[Task]):
-    global tasks_global, is_in_double_mode, completed_tasks
+    global tasks_global, is_in_double_mode, completed_tasks, best_sys_to_borrow
+    best_sys_to_borrow = -1
     completed_tasks = []
     
     handle_availability(tasks)    
